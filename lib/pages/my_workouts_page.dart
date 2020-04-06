@@ -12,14 +12,17 @@ class _MyWorkoutsState extends State<MyWorkouts> {
   Widget build(BuildContext context) {
     return Container(
       child: Container(
-          child: Text('My workouts',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 254),
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
-                  fontFamily: 'Roboto',
-                  letterSpacing: 0.5))),
+        child: Text('My workouts',
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 254),
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.normal,
+            fontFamily: 'Roboto',
+            letterSpacing: 0.5
+          )
+        )
+      ),
     );
   }
 }
