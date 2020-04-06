@@ -27,12 +27,13 @@ class _BasePageState extends State<BasePage> {
           title: Text(
             'Fitr',
             style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 254),
-                fontSize: 24,
-                fontWeight: FontWeight.normal,
-                fontStyle: FontStyle.normal,
-                fontFamily: 'Lobster',
-                letterSpacing: 0.5),
+              color: Color.fromARGB(255, 255, 255, 254),
+              fontSize: 24,
+              fontWeight: FontWeight.normal,
+              fontStyle: FontStyle.normal,
+              fontFamily: 'Lobster',
+              letterSpacing: 0.5
+            ),
           ),
           actions: <Widget>[
             IconButton(
@@ -49,24 +50,27 @@ class _BasePageState extends State<BasePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.dashboard),
             title: Text('Dashboard'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.timeline),
             title: Text('Statistics'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.fitness_center),
             title: Text('Workouts'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.settings),
             title: Text('Settings'),
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color.fromARGB(255, 29, 29, 29),
+        unselectedItemColor: Color.fromARGB(255, 142, 142, 142),
+        selectedItemColor: Color.fromARGB(255, 255, 255, 254),
         onTap: _onItemTapped
       ),
     );
