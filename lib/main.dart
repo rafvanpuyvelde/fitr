@@ -3,6 +3,7 @@ import 'package:fitr/pages/my_workouts_page.dart';
 import 'package:fitr/pages/settings_page.dart';
 import 'package:fitr/pages/statistics_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(FitrApp());
 
@@ -18,8 +19,8 @@ class FitrAppState extends State<FitrApp> {
 
   final _pageOptions = [
     HomePage(),
-    MyWorkoutsPage(),
     StatisticsPage(),
+    MyWorkoutsPage(),
     SettingsPage()
   ];
 

@@ -7,7 +7,7 @@ class StatisticsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25.0),
-      child: Text('Home'),
+      child: Text('Statistics'),
     );
   }
 }
