@@ -126,7 +126,7 @@ namespace Fitr
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fitr API V1");
             });
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseRouting();
 
             // Start JWT
