@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,10 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
         .toList();
 
     return response.statusCode == 200 ? workouts : null;
+  }
+
+  onWorkoutTapped(Workout workout) {
+    log(workout.id.toString());
   }
 
   @override
@@ -71,25 +76,47 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       bottom: 8, left: 18, right: 18),
-                                  child: Container(
-                                      height: 50,
-                                      color: Color.fromARGB(255, 29, 29, 29),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 31),
-                                            child: Text(
-                                              '${snapshot.data[index].name}',
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 255, 255, 254)),
-                                            ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      onWorkoutTapped(snapshot.data[index]);
+                                    },
+                                    child: Container(
+                                        height: 50,
+                                        color: Color.fromARGB(255, 29, 29, 29),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  left: BorderSide(
+                                                      color: snapshot
+                                                              .data[index]
+                                                              .isActive
+                                                          ? Color.fromARGB(
+                                                              255, 11, 127, 222)
+                                                          : Colors.transparent,
+                                                      width: 6))),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 31),
+                                                child: Text(
+                                                  '${snapshot.data[index].name}'
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 255, 255, 254),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.5),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      )),
+                                        )),
+                                  ),
                                 );
                               }));
                     }

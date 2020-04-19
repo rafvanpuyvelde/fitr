@@ -41,12 +41,13 @@ DELETE FROM [dbo].[Workouts]
 
 INSERT INTO [dbo].[Workouts]
            ([Name]
-           ,[UserId])
+           ,[UserId]
+		   ,[IsActive])
      VALUES
-           ('Full body', '1100287a-fe90-442a-ba92-24d5bcddeeb1'),
-		   ('Upper lower split', '1100287a-fe90-442a-ba92-24d5bcddeeb1'),
-		   ('Push pull legs', '1100287a-fe90-442a-ba92-24d5bcddeeb1'),
-		   ('5x5 workout', '1200287a-fe90-442a-ba92-24d5bcddeeb2'),
-		   ('Warmup routine', '1200287a-fe90-442a-ba92-24d5bcddeeb2')
+           ('Full body', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
+		   ('Upper lower split', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
+		   ('Push pull legs', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
+		   ('5x5 workout', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0),
+		   ('Warmup routine', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0)
 GO
 

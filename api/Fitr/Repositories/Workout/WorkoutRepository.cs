@@ -31,6 +31,7 @@ namespace Fitr.Repositories.Workout
                 {
                     Id = w.Id,
                     Name = w.Name,
+                    IsActive = w.IsActive,
                     Exercises = w.Exercises.Select(e => new WorkoutExercisesDto
                     {
                         Id = e.ExerciseId,

@@ -12,6 +12,8 @@ namespace Fitr.Models
         
         public User User { get; set; }
 
+        public bool IsActive { get; set; }
+
         public ICollection<Session> Sessions { get; set; }
 
         public ICollection<WorkoutHasExercise> Exercises { get; set; }

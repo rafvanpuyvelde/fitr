@@ -8,6 +8,8 @@ namespace Fitr.Dtos.Workout
 
         public string Name { get; set; }
 
+        public bool IsActive { get; set; }
+
         public ICollection<WorkoutSessionDto> Sessions { get; set; }
 
         public ICollection<WorkoutExercisesDto> Exercises { get; set; }
