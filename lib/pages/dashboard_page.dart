@@ -1,7 +1,8 @@
+import 'package:fitr/models/user.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({Key key}) : super(key: key);
+  const DashboardPage({Key key, User user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,36 +1,42 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:fitr/models/user.dart';
+import 'package:fitr/models/workout.dart';
 import 'package:http/http.dart' as http;
-import 'package:fitr/models/album.dart';
 import 'package:flutter/material.dart';
 
-Future<List<Album>> fetchAlbums() async {
-  final response =
-      await http.get('https://jsonplaceholder.typicode.com/albums');
-
-  List<Album> albums = (json.decode(response.body) as List)
-      .map((i) => Album.fromJson(i))
-      .toList();
-
-  if (response.statusCode != 200) throw Exception('Failed to load album');
-
-  return albums;
-}
-
 class MyWorkoutsPage extends StatefulWidget {
-  MyWorkoutsPage({Key key}) : super(key: key);
+  final User user;
+
+  MyWorkoutsPage({this.user, Key key}) : super(key: key);
 
   @override
   _MyWorkoutsPageState createState() => _MyWorkoutsPageState();
 }
 
 class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
-  Future<List<Album>> _futureAlbums;
+  Future<List<Workout>> _futureWorkouts;
+
+  Future<List<Workout>> fetchWorkouts() async {
+    const url = 'http://758e99bd.ngrok.io';
+
+    final response =
+        await http.get('$url/api/workouts', headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.user.token}'
+    });
+
+    List<Workout> workouts = (json.decode(response.body) as List)
+        .map((i) => Workout.fromJson(i))
+        .toList();
+
+    return response.statusCode == 200 ? workouts : null;
+  }
 
   @override
   void initState() {
     super.initState();
-    _futureAlbums = fetchAlbums();
+    _futureWorkouts = fetchWorkouts();
   }
 
   @override
@@ -49,7 +55,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                   letterSpacing: 0.5)),
           Expanded(
               child: FutureBuilder(
-                  future: _futureAlbums,
+                  future: _futureWorkouts,
                   builder: (context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                       return Center(child: CircularProgressIndicator());
@@ -59,7 +65,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                               itemCount: snapshot.data.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Text(
-                                  '${snapshot.data[index].title}',
+                                  '${snapshot.data[index].name}',
                                   style: TextStyle(
                                       color:
                                           Color.fromARGB(255, 255, 255, 254)),

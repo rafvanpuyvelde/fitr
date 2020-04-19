@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/pages/home_page.dart';
-import 'package:fitr/pages/test.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer';
 import 'package:fitr/components/custom-input-field.dart';
 import 'package:flutter/material.dart';
 

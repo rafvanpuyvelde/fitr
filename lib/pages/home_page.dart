@@ -17,12 +17,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
 
-  final _pageOptions = [
-    DashboardPage(),
-    StatisticsPage(),
-    MyWorkoutsPage(),
-    SettingsPage()
-  ];
+  var _pageOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageOptions = [
+      DashboardPage(user: widget.user),
+      StatisticsPage(user: widget.user),
+      MyWorkoutsPage(user: widget.user),
+      SettingsPage(user: widget.user)
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
