@@ -1,10 +1,14 @@
+import 'package:fitr/models/user.dart';
+import 'package:fitr/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/pages/my_workouts_page.dart';
 import 'package:fitr/pages/settings_page.dart';
 import 'package:fitr/pages/statistics_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  final User user;
+
+  HomePage({this.user, Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
 
   final _pageOptions = [
-    HomePage(),
+    DashboardPage(),
     StatisticsPage(),
     MyWorkoutsPage(),
     SettingsPage()

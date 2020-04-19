@@ -2,25 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:fitr/models/user.dart';
+import 'package:fitr/pages/home_page.dart';
+import 'package:fitr/pages/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'package:fitr/components/custom-input-field.dart';
 import 'package:flutter/material.dart';
-
-Future<User> authenticate(String userName, String password) async {
-  final response = await http.post(
-    'https://fa9cec72.ngrok.io/api/users/authenticate',
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode(
-        <String, String>{'userName': userName, 'password': password}),
-  );
-
-  return (response.statusCode == 201)
-      ? User.fromJson(json.decode(response.body))
-      : null;
-}
 
 class LoginForm extends StatefulWidget {
   LoginForm({Key key}) : super(key: key);
@@ -37,13 +24,36 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<User> _futureUser;
 
+  Future<User> authenticate(String userName, String password) async {
+    const url = 'http://758e99bd.ngrok.io';
+
+    final response = await http.post(
+      '$url/api/users/authenticate',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+          <String, String>{'userName': userName, 'password': password}),
+    );
+
+    return (response.statusCode == 201)
+        ? User.fromJson(json.decode(response.body))
+        : null;
+  }
+
   void login() {
-    _futureUser =
-        authenticate(_userNameController.text, _passwordController.text);
+    _futureUser = authenticate(_userNameController.text.replaceAll('\t', ''),
+        _passwordController.text.replaceAll('\t', ''));
 
     _futureUser.then((User user) => {
           if (user.token != null)
-            {Navigator.pushReplacementNamed(context, '/dashboard')}
+            setState(() {
+              Navigator.pushReplacement(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          new HomePage(user: user)));
+            })
         });
   }
 
