@@ -1,13 +1,20 @@
+import 'package:fitr/models/workout.dart';
 import 'package:flutter/material.dart';
 
-class WorkoutDetailsPage extends StatelessWidget {
-  const WorkoutDetailsPage({Key key}) : super(key: key);
+class WorkoutDetailPage extends StatefulWidget {
+  final Workout workout;
 
+  WorkoutDetailPage(this.workout, {Key key}) : super(key: key);
+
+  @override
+  _WorkoutDetailPageState createState() => _WorkoutDetailPageState();
+}
+
+class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25.0),
-      child: Text('WorkoutDetails'),
+      child: Text(widget.workout.name),
     );
   }
 }

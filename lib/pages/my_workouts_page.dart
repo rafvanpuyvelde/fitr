@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
+import 'package:fitr/pages/workout_detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,10 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
 
   onWorkoutTapped(Workout workout) {
     log(workout.id.toString());
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => WorkoutDetailPage(workout)));
   }
 
   @override
