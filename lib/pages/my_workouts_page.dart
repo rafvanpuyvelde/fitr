@@ -44,15 +44,19 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
     return Container(
       color: Color.fromARGB(255, 15, 15, 15),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('My workouts',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 254),
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
-                  fontFamily: 'Roboto',
-                  letterSpacing: 0.5)),
+          Padding(
+            padding: const EdgeInsets.only(top: 57, left: 18, bottom: 33),
+            child: Text('My Workouts',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 254),
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.normal,
+                    fontFamily: 'Roboto',
+                    letterSpacing: 0.5)),
+          ),
           Expanded(
               child: FutureBuilder(
                   future: _futureWorkouts,
@@ -64,11 +68,28 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                           child: ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Text(
-                                  '${snapshot.data[index].name}',
-                                  style: TextStyle(
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 254)),
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8, left: 18, right: 18),
+                                  child: Container(
+                                      height: 50,
+                                      color: Color.fromARGB(255, 29, 29, 29),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 31),
+                                            child: Text(
+                                              '${snapshot.data[index].name}',
+                                              style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 255, 255, 254)),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                 );
                               }));
                     }
