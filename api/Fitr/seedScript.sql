@@ -1,10 +1,22 @@
+DELETE FROM [dbo].AspNetRoleClaims
+DELETE FROM [dbo].AspNetRoles
+DELETE FROM [dbo].AspNetUserClaims
+DELETE FROM [dbo].AspNetUserLogins
+DELETE FROM [dbo].AspNetUserRoles
+DELETE FROM [dbo].AspNetUserTokens
+DELETE FROM [dbo].Exercises
+DELETE FROM [dbo].Reps
+DELETE FROM [dbo].Sessions
+DELETE FROM [dbo].Sets
+DELETE FROM [dbo].WorkoutHasExercises
+DELETE FROM [dbo].Workouts
+DELETE FROM [dbo].AspNetUsers
+
 -- 
 -- USERS
 --
 USE [Fitr]
 GO
-
-DELETE FROM [dbo].[AspNetUsers]
 
 INSERT INTO [dbo].[AspNetUsers]
            ([Id]
@@ -37,17 +49,55 @@ GO
 USE [Fitr]
 GO
 
-DELETE FROM [dbo].[Workouts]
+SET IDENTITY_INSERT [dbo].[Workouts] ON
 
 INSERT INTO [dbo].[Workouts]
-           ([Name]
+           ([Id],[Name]
            ,[UserId]
 		   ,[IsActive])
      VALUES
-           ('Full body', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
-		   ('Upper lower split', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
-		   ('Push pull legs', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
-		   ('5x5 workout', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0),
-		   ('Warmup routine', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0)
+           (1, 'Full body', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 1),
+		   (2, 'Upper lower split', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
+		   (3, 'Push pull legs', '1100287a-fe90-442a-ba92-24d5bcddeeb1', 0),
+		   (4, '5x5 workout', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0),
+		   (5, 'Warmup routine', '1200287a-fe90-442a-ba92-24d5bcddeeb2', 0)
 GO
 
+SET IDENTITY_INSERT [dbo].[Workouts] OFF
+
+-- 
+-- Exercises
+--
+USE [Fitr]
+GO
+
+SET IDENTITY_INSERT [dbo].[Exercises] ON
+
+INSERT INTO [dbo].[Exercises]
+           ([Id], [Name])
+     VALUES
+           (1, 'Bench press'),
+		   (2, 'Squat'),
+		   (3, 'Overhead press'),
+		   (4, 'Tricep pushdown'),
+		   (5, 'Lateral raise')
+GO
+
+SET IDENTITY_INSERT [dbo].[Exercises] OFF
+
+-- 
+-- WorkoutHasExercises
+--
+USE [Fitr]
+GO
+
+INSERT INTO [dbo].[WorkoutHasExercises]
+           ([WorkoutId],
+		   [ExerciseId])
+     VALUES
+           (1, 1),
+		   (1, 2),
+		   (1, 3),
+		   (1, 4),
+		   (1, 5)
+GO

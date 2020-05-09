@@ -9,9 +9,8 @@ class Exercise {
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
-      id: json['id'],
-      name: json['name'],
-      sets: json['sets'],
-    );
+        id: json['id'],
+        name: json['name'],
+        sets: json['sets'].forEach((set) => new ExerciseSet.fromJson(set)));
   }
 }

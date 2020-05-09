@@ -41,7 +41,8 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => WorkoutDetailPage(workout)));
+            builder: (BuildContext context) =>
+                WorkoutDetailPage(workout: workout)));
   }
 
   @override

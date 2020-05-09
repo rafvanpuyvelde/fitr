@@ -25,6 +25,6 @@ class Workout {
         isActive: json['isActive'],
         sessions: json['sessions'],
         exercises: json['exercises']
-            .forEach((exercise) => Exercise.fromJson(exercise)));
+            .forEach((exercise) => new Exercise.fromJson(exercise)));
   }
 }
