@@ -5,6 +5,7 @@ import 'package:fitr/pages/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:fitr/components/custom-input-field.dart';
 import 'package:flutter/material.dart';
+import 'package:fitr/globals.dart' as globals;
 
 class LoginForm extends StatefulWidget {
   LoginForm({Key key}) : super(key: key);
@@ -22,7 +23,7 @@ class _LoginFormState extends State<LoginForm> {
   Future<User> _futureUser;
 
   Future<User> authenticate(String userName, String password) async {
-    const url = 'http://758e99bd.ngrok.io';
+    var url = globals.baseApiUrl;
 
     final response = await http.post(
       '$url/api/users/authenticate',

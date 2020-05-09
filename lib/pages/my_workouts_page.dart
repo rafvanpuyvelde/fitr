@@ -6,6 +6,7 @@ import 'package:fitr/models/workout.dart';
 import 'package:fitr/pages/workout_detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:fitr/globals.dart' as globals;
 
 class MyWorkoutsPage extends StatefulWidget {
   final User user;
@@ -20,7 +21,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
   Future<List<Workout>> _futureWorkouts;
 
   Future<List<Workout>> fetchWorkouts() async {
-    const url = 'http://758e99bd.ngrok.io';
+    var url = globals.baseApiUrl;
 
     final response =
         await http.get('$url/api/workouts', headers: <String, String>{
