@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
 import 'package:fitr/pages/workout_detail_page.dart';
@@ -18,6 +19,7 @@ class MyWorkoutsPage extends StatefulWidget {
 }
 
 class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   Future<List<Workout>> _futureWorkouts;
 
   Future<List<Workout>> fetchWorkouts() async {
@@ -53,83 +55,102 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color.fromARGB(255, 15, 15, 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 57, left: 18, bottom: 33),
-            child: Text('My Workouts',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 254),
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.normal,
-                    fontFamily: 'Roboto',
-                    letterSpacing: 0.5)),
-          ),
-          Expanded(
-              child: FutureBuilder(
-                  future: _futureWorkouts,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      return Container(
-                          child: ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 8, left: 18, right: 18),
-                                  child: InkWell(
-                                    onTap: () {
-                                      onWorkoutTapped(snapshot.data[index]);
-                                    },
-                                    child: Container(
-                                        height: 50,
-                                        color: Color.fromARGB(255, 29, 29, 29),
+    return Scaffold(
+        backgroundColor: globals.primaryColor,
+        key: _drawerKey,
+        drawer: SideMenu(widget.user),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: globals.primaryColor,
+          foregroundColor: globals.infoColor,
+          child: Icon(Icons.menu),
+          onPressed: () => _drawerKey.currentState.openDrawer(),
+        ),
+        bottomNavigationBar: BottomAppBar(
+            color: globals.secondaryColor, child: Container(height: 50)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: SafeArea(
+            child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 57, left: 18, bottom: 33),
+                child: Text('My Workouts',
+                    style: TextStyle(
+                        color: globals.primaryTextColor,
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: 'Roboto',
+                        letterSpacing: 0.5)),
+              ),
+              Expanded(
+                  child: FutureBuilder(
+                      future: _futureWorkouts,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          return Container(
+                              child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 8, left: 18, right: 18),
+                                      child: InkWell(
+                                        onTap: () {
+                                          onWorkoutTapped(snapshot.data[index]);
+                                        },
                                         child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  left: BorderSide(
-                                                      color: snapshot
-                                                              .data[index]
-                                                              .isActive
-                                                          ? Color.fromARGB(
-                                                              255, 11, 127, 222)
-                                                          : Colors.transparent,
-                                                      width: 6))),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 31),
-                                                child: Text(
-                                                  '${snapshot.data[index].name}'
-                                                      .toUpperCase(),
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 255, 255, 254),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                      letterSpacing: 0.5),
-                                                ),
+                                            height: 50,
+                                            color: globals.secondaryColor,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      left: BorderSide(
+                                                          color: snapshot
+                                                                  .data[index]
+                                                                  .isActive
+                                                              ? Color.fromARGB(
+                                                                  255,
+                                                                  11,
+                                                                  127,
+                                                                  222)
+                                                              : Colors
+                                                                  .transparent,
+                                                          width: 6))),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 31),
+                                                    child: Text(
+                                                      '${snapshot.data[index].name}'
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          color: globals
+                                                              .primaryTextColor,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.5),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        )),
-                                  ),
-                                );
-                              }));
-                    }
-                  })),
-        ],
-      ),
-    );
+                                            )),
+                                      ),
+                                    );
+                                  }));
+                        }
+                      })),
+            ],
+          ),
+        )));
   }
 }
