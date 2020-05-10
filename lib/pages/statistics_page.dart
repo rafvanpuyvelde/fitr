@@ -1,9 +1,16 @@
 import 'package:fitr/models/user.dart';
 import 'package:flutter/material.dart';
 
-class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({Key key, User user}) : super(key: key);
+class StatisticsPage extends StatefulWidget {
+  final User user;
 
+  const StatisticsPage(this.user, {Key key}) : super(key: key);
+
+  @override
+  _StatisticsPageState createState() => _StatisticsPageState();
+}
+
+class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(

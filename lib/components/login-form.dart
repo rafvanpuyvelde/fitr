@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:fitr/models/user.dart';
-import 'package:fitr/pages/home_page.dart';
+import 'package:fitr/pages/dashboard_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:fitr/components/custom-input-field.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
                   context,
                   new MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          new HomePage(user: user)));
+                          new DashboardPage(user: user)));
             })
         });
   }

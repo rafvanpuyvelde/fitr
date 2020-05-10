@@ -11,7 +11,7 @@ import 'package:fitr/globals.dart' as globals;
 class MyWorkoutsPage extends StatefulWidget {
   final User user;
 
-  MyWorkoutsPage({this.user, Key key}) : super(key: key);
+  MyWorkoutsPage(this.user, {Key key}) : super(key: key);
 
   @override
   _MyWorkoutsPageState createState() => _MyWorkoutsPageState();
