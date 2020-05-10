@@ -20,13 +20,16 @@ class ExerciseSet {
       this.reps});
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) {
+    var listOfReps = json['reps'] as List;
+    var reps = listOfReps.map((rep) => ExerciseRep.fromJson(rep)).toList();
+
     return ExerciseSet(
         id: json['id'],
         exerciseId: json['exerciseId'],
-        weight: json['weight'],
+        weight: json['weight'].toDouble(),
         unit: json['unit'],
         usesBands: json['usesBands'],
         usesChains: json['usesChains'],
-        reps: json['reps'].forEach((rep) => new ExerciseRep.fromJson(rep)));
+        reps: reps);
   }
 }

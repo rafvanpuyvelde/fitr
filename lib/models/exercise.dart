@@ -8,9 +8,9 @@ class Exercise {
   Exercise({this.id, this.name, this.sets});
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-        id: json['id'],
-        name: json['name'],
-        sets: json['sets'].forEach((set) => new ExerciseSet.fromJson(set)));
+    var listOfSets = json['sets'] as List;
+    var sets = listOfSets.map((set) => ExerciseSet.fromJson(set)).toList();
+
+    return Exercise(id: json['id'], name: json['name'], sets: sets);
   }
 }

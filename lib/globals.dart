@@ -1,3 +1,3 @@
 library fitr.globals;
 
-String baseApiUrl = 'http://5b5bc075.ngrok.io';
+String baseApiUrl = 'http://d2211921.ngrok.io';
