@@ -71,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
       child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Color.fromARGB(255, 29, 29, 29),
+          color: globals.primaryColor,
           child: Center(
             child: Container(
                 width: 400,
@@ -84,8 +84,8 @@ class _LoginFormState extends State<LoginForm> {
                       child: Text(
                         'Fitr',
                         style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 254),
-                            fontSize: 42,
+                            color: globals.primaryTextColor,
+                            fontSize: 50,
                             fontWeight: FontWeight.normal,
                             fontStyle: FontStyle.normal,
                             fontFamily: 'Lobster',
@@ -99,14 +99,24 @@ class _LoginFormState extends State<LoginForm> {
                           'password', _passwordController, true),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            login();
-                          }
-                        },
-                        child: Text('Login'),
+                      padding: const EdgeInsets.only(top: 35.0),
+                      child: ButtonTheme(
+                        minWidth: 200.0,
+                        height: 50.0,
+                        child: RaisedButton(
+                          color: globals.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          elevation: 8,
+                          textColor: globals.primaryTextColor,
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              login();
+                            }
+                          },
+                          child: Text('Login'),
+                        ),
                       ),
                     ),
                   ],
