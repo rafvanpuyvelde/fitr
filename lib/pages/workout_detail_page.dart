@@ -12,18 +12,36 @@ class WorkoutDetailPage extends StatefulWidget {
 
 class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   getExercises() {
-    var exercises = new List<Text>();
+    var exercises = new List<Widget>();
 
     if (widget.workout.exercises != null &&
         widget.workout.exercises.length > 0) {
       for (var exercise in widget.workout.exercises) {
-        exercises.add(new Text(exercise.name));
+        exercises.add(getExerciseCard(exercise.name));
       }
     } else {
-      exercises.add(new Text('No exercises yet ...'));
+      return new Text('No exercises yet ...');
     }
 
     return exercises;
+  }
+
+  getExerciseCard(String exerciseName) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 30.0, bottom: 30.0, left: 15.0, right: 10.0),
+      child: Card(
+          child: InkWell(
+        splashColor: Colors.blue.withAlpha(30),
+        onTap: () {
+          print('Card tapped.');
+        },
+        child: Container(
+          width: 300,
+          child: Text(exerciseName),
+        ),
+      )),
+    );
   }
 
   @override
@@ -50,11 +68,12 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               child: Container(
                 child: ListView(
                   children: getExercises(),
+                  scrollDirection: Axis.horizontal,
                 ),
               ),
             )),
             Padding(
-              padding: const EdgeInsets.only(bottom: 40),
+              padding: const EdgeInsets.only(bottom: 70),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
