@@ -44,7 +44,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) =>
-                WorkoutDetailPage(workout: workout)));
+                WorkoutDetailPage(widget.user, workout: workout)));
   }
 
   @override
@@ -66,7 +66,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
           onPressed: () => _drawerKey.currentState.openDrawer(),
         ),
         bottomNavigationBar: BottomAppBar(
-            color: globals.secondaryColor, child: Container(height: 50)),
+            color: globals.secondaryColor, child: Container(height: 60)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
             child: Container(

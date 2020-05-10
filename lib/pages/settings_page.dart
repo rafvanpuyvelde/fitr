@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () => _drawerKey.currentState.openDrawer(),
         ),
         bottomNavigationBar: BottomAppBar(
-            color: globals.secondaryColor, child: Container(height: 50)),
+            color: globals.secondaryColor, child: Container(height: 60)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
             child: Center(child: Text('Settings ${widget.user.name}'))));

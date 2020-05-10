@@ -28,7 +28,7 @@ class _DashboardPageState extends State<DashboardPage> {
           onPressed: () => _drawerKey.currentState.openDrawer(),
         ),
         bottomNavigationBar: BottomAppBar(
-            color: globals.secondaryColor, child: Container(height: 50)),
+            color: globals.secondaryColor, child: Container(height: 60)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
             child: Center(child: Text('Dashboard ${widget.user.name}'))));
