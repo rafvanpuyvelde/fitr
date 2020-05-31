@@ -19,7 +19,9 @@ class Workout {
 
   factory Workout.fromJson(Map<String, dynamic> json) {
     var listOfExercises = json['exercises'] as List;
-    var exercises = listOfExercises.map((ex) => Exercise.fromJson(ex)).toList();
+    var exercises = (listOfExercises == null)
+        ? null
+        : listOfExercises.map((ex) => Exercise.fromJson(ex)).toList();
 
     return Workout(
         id: json['id'],

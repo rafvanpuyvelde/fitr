@@ -9,6 +9,6 @@ namespace Fitr.Models
         
         public string LastName { get; set; }
 
-        public ICollection<Workout> Workouts { get; set; }
+        public virtual ICollection<Workout> Workouts { get; set; }
     }
 }

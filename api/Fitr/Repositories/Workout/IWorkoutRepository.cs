@@ -6,7 +6,7 @@ namespace Fitr.Repositories.Workout
 {
     public interface IWorkoutRepository
     {
-        Task<WorkoutDto> Get(string id);
+        Task<WorkoutDetailDto> Get(string currentUserId, int workoutId);
         
         Task<IEnumerable<WorkoutDto>> GetAll(string currentUserId);
         

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Fitr.Models
 {
@@ -10,6 +11,8 @@ namespace Fitr.Models
         
         public int WorkoutId { get; set; }
         
-        public Workout Workout { get; set; }
+        public virtual Workout Workout { get; set; }
+
+        public virtual ICollection<Set> Sets { get; set; }
     }
 }

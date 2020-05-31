@@ -21,7 +21,9 @@ class ExerciseSet {
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) {
     var listOfReps = json['reps'] as List;
-    var reps = listOfReps.map((rep) => ExerciseRep.fromJson(rep)).toList();
+    var reps = listOfReps == null
+        ? null
+        : listOfReps.map((rep) => ExerciseRep.fromJson(rep)).toList();
 
     return ExerciseSet(
         id: json['id'],

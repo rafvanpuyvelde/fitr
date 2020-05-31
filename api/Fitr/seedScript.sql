@@ -9,7 +9,6 @@ DELETE FROM [dbo].AspNetUserRoles
 DELETE FROM [dbo].AspNetUserTokens
 DELETE FROM [dbo].Sets
 DELETE FROM [dbo].Exercises
-DELETE FROM [dbo].Reps
 DELETE FROM [dbo].Sessions
 DELETE FROM [dbo].WorkoutHasExercises
 DELETE FROM [dbo].Workouts
@@ -104,9 +103,7 @@ INSERT INTO [dbo].[Sessions]
      VALUES
            (1, '01/07/2020 05:34:22 PM', 1),
 		   (2, '02/27/2020 11:55:04 PM', 1),
-		   (3, '04/11/2020 01:32:04 AM', 1),
-		   (4, '03/19/2020 10:56:24 AM', 1),
-		   (5, '04/06/2020 04:22:02 AM', 1)
+		   (3, '04/11/2020 01:32:04 AM', 1)
 GO
 
 SET IDENTITY_INSERT [dbo].[Sessions] OFF
@@ -117,60 +114,71 @@ SET IDENTITY_INSERT [dbo].[Sessions] OFF
 SET IDENTITY_INSERT [dbo].[Sets] ON
 
 INSERT INTO [dbo].[Sets]
-           ([Id], [ExerciseId], [Weight], [Unit], [UsesBands], [UsesChains])
+           ([Id], [ExerciseId], [Weight], [Unit], [UsesBands], [UsesChains], [Reps], [SessionId])
      VALUES
-           (1, 1, 84.0, 0, 'false', 'false'),
-		   (2, 1, 80.0, 0, 'false', 'false'),
-		   (3, 1, 100.0, 0, 'false', 'false'),
-		   (4, 1, 101.0, 0, 'false', 'false'),
-		   (5, 2, 100.0, 0, 'false', 'false'),
-		   (6, 2, 105.0, 0, 'false', 'false'),
-		   (7, 2, 100.0, 0, 'false', 'false'),
-		   (8, 2, 106.0, 0, 'false', 'false'),
-		   (9, 3, 58.0, 0, 'false', 'false'),
-		   (10, 3, 58.0, 0, 'false', 'false'),
-		   (11, 3, 60.0, 0, 'false', 'false'),
-		   (12, 3, 61.0, 0, 'false', 'false'),
-		   (13, 4, 30.0, 0, 'false', 'false'),
-		   (14, 4, 31.0, 0, 'false', 'false'),
-		   (15, 4, 32.0, 0, 'false', 'false'),
-		   (16, 4, 32.0, 0, 'false', 'false'),
-		   (17, 5, 10.0, 0, 'false', 'false'),
-		   (18, 5, 11.0, 0, 'false', 'false'),
-		   (19, 5, 10.0, 0, 'false', 'false'),
-		   (20, 5, 12.0, 0, 'false', 'false')
+           (1, 1, 100.0, 0, 'false', 'false', 6, 1),
+		   (2, 1, 100.0, 0, 'false', 'false', 6, 1),
+		   (3, 1, 100.0, 0, 'false', 'false', 7, 1),
+
+		   (4, 1, 101.0, 0, 'false', 'false', 6, 2),
+		   (5, 1, 101.0, 0, 'false', 'false', 6, 2),
+		   (6, 1, 101.0, 0, 'false', 'false', 6, 2),
+
+		   (7, 1, 101.0, 0, 'false', 'false', 6, 3),
+		   (8, 1, 101.0, 0, 'false', 'false', 7, 3),
+		   (9, 1, 101.0, 0, 'false', 'false', 7, 3),
+
+
+		   (10, 2, 120.0, 0, 'false', 'false', 6, 1),
+		   (11, 2, 120.0, 0, 'false', 'false', 6, 1),
+		   (12, 2, 120.0, 0, 'false', 'false', 7, 1),
+
+		   (13, 2, 120.0, 0, 'false', 'false', 6, 2),
+		   (14, 2, 120.0, 0, 'false', 'false', 6, 2),
+		   (15, 2, 120.0, 0, 'false', 'false', 6, 2),
+
+		   (16, 2, 120.0, 0, 'false', 'false', 6, 3),
+		   (17, 2, 120.0, 0, 'false', 'false', 7, 3),
+		   (18, 2, 120.0, 0, 'false', 'false', 7, 3),
+
+
+		   (19, 3, 50.0, 0, 'false', 'false', 6, 1),
+		   (20, 3, 50.0, 0, 'false', 'false', 6, 1),
+		   (21, 3, 51.0, 0, 'false', 'false', 7, 1),
+
+		   (22, 3, 51.0, 0, 'false', 'false', 6, 2),
+		   (23, 3, 51.0, 0, 'false', 'false', 6, 2),
+		   (24, 3, 51.0, 0, 'false', 'false', 6, 2),
+
+		   (25, 3, 48.0, 0, 'false', 'false', 6, 3),
+		   (26, 3, 48.0, 0, 'false', 'false', 7, 3),
+		   (27, 3, 50.0, 0, 'false', 'false', 7, 3),
+
+
+		   (28, 4, 30.0, 0, 'false', 'false', 10, 1),
+		   (29, 4, 30.0, 0, 'false', 'false', 12, 1),
+		   (31, 4, 30.0, 0, 'false', 'false', 15, 1),
+
+		   (32, 4, 30.0, 0, 'false', 'false', 12, 2),
+		   (33, 4, 30.0, 0, 'false', 'false', 12, 2),
+		   (34, 4, 30.0, 0, 'false', 'false', 12, 2),
+
+		   (35, 4, 30.0, 0, 'false', 'false', 15, 3),
+		   (36, 4, 30.0, 0, 'false', 'false', 15, 3),
+		   (37, 4, 30.0, 0, 'false', 'false', 15, 3),
+
+
+		   (38, 5, 10.0, 0, 'false', 'false', 10, 1),
+		   (39, 5, 10.0, 0, 'false', 'false', 10, 1),
+		   (40, 5, 10.0, 0, 'false', 'false', 10, 1),
+
+		   (41, 5, 10.0, 0, 'false', 'false', 12, 2),
+		   (42, 5, 10.0, 0, 'false', 'false', 8, 2),
+		   (43, 5, 10.0, 0, 'false', 'false', 10, 2),
+
+		   (44, 5, 10.0, 0, 'false', 'false', 12, 3),
+		   (45, 5, 10.0, 0, 'false', 'false', 12, 3),
+		   (46, 5, 10.0, 0, 'false', 'false', 12, 3)
 GO
 
 SET IDENTITY_INSERT [dbo].[Sets] OFF
-
--- 
--- Reps
---
-SET IDENTITY_INSERT [dbo].[Reps] ON
-
-INSERT INTO [dbo].[Reps]
-           ([Id], [SetId], [ExerciseId], [Amount])
-     VALUES
-           (1, 1, 1, 12),
-		   (2, 2, 1, 12),
-		   (3, 3, 1, 12),
-		   (4, 4, 1, 12),
-		   (5, 5, 2, 6),
-		   (6, 6, 2, 6),
-		   (7, 7, 2, 6),
-		   (8, 8, 2, 6),
-		   (9, 9, 3, 3),
-		   (10, 10, 3, 3),
-		   (11, 11, 3, 3),
-		   (12, 12, 3, 3),
-		   (13, 13, 4, 12),
-		   (14, 14, 4, 12),
-		   (15, 15, 4, 12),
-		   (16, 16, 4, 12),
-		   (17, 17, 5, 15),
-		   (18, 18, 5, 15),
-		   (19, 19, 5, 15),
-		   (20, 20, 5, 15)
-GO
-
-SET IDENTITY_INSERT [dbo].[Reps] OFF

@@ -24,8 +24,6 @@ namespace Fitr.Data
 
         public DbSet<Exercise> Exercises { get; set; }
         
-        public DbSet<Rep> Reps { get; set; }
-        
         public DbSet<Session> Sessions { get; set; }
         
         public DbSet<Set> Sets { get; set; }

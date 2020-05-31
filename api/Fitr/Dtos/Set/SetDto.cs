@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Fitr.Data;
+﻿using Fitr.Data;
 using Fitr.Dtos.Exercise;
-using Fitr.Dtos.Rep;
 
 namespace Fitr.Dtos.Set
 {
@@ -21,6 +19,6 @@ namespace Fitr.Dtos.Set
         
         public bool UsesChains { get; set; }
 
-        public ICollection<RepDto> Reps { get; set; }
+        public int Reps { get; set; }
     }
 }

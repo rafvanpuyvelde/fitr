@@ -76,7 +76,9 @@ D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Scrutor.dll
 D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Annotations.dll
 D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Filters.dll
-D:\Repos\fitr\api\Fitr\obj\Debug\netcoreapp3.1\Fitr.csprojAssemblyReference.cache
+D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Castle.Core.dll
+D:\Repos\fitr\api\Fitr\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Proxies.dll
 D:\Repos\fitr\api\Fitr\obj\Debug\netcoreapp3.1\Fitr.csproj.CoreCompileInputs.cache
 D:\Repos\fitr\api\Fitr\obj\Debug\netcoreapp3.1\Fitr.MvcApplicationPartsAssemblyInfo.cs
 D:\Repos\fitr\api\Fitr\obj\Debug\netcoreapp3.1\Fitr.MvcApplicationPartsAssemblyInfo.cache
+D:\Repos\fitr\api\Fitr\obj\Debug\netcoreapp3.1\Fitr.csprojAssemblyReference.cache

@@ -14,12 +14,10 @@ namespace Fitr.Data
             SetupExerciseDbRelation(modelBuilder);
             
             SetupSetDbRelation(modelBuilder);
-            
-            SetupRepDbRelation(modelBuilder);
-            
+
             SetupWorkoutHasExercisesDbRelation(modelBuilder);
         }
-        
+
         public static void SeedDb(this ModelBuilder modelBuilder)
         {
             var pwdHasher = new PasswordHasher<User>();
@@ -109,33 +107,24 @@ namespace Fitr.Data
             });
         }
 
-        private static void SetupRepDbRelation(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Rep>(rep =>
-            {
-                rep.HasOne(r => r.Set)
-                    .WithMany(s => s.Reps) 
-                    .HasForeignKey(r => r.SetId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); // When a Rep is deleted, the corresponding Sets may not be deleted
-            });
-        }
-        
         private static void SetupSetDbRelation(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Set>(set =>
             {
-                set.HasMany(s => s.Reps)
-                    .WithOne(r => r.Set) 
-                    .HasForeignKey(r => r.SetId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); // When a Set is deleted, the corresponding Reps may not be deleted
-                
                 set.HasOne(s => s.Exercise)
                     .WithMany(e => e.Sets) 
                     .HasForeignKey(s => s.ExerciseId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Restrict); // When a Set is deleted, the corresponding Exercises may not be deleted
+            });
+
+            modelBuilder.Entity<Set>(set =>
+            {
+                set.HasOne(s => s.Session)
+                    .WithMany(e => e.Sets)
+                    .HasForeignKey(s => s.SessionId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Restrict); // When a Set is deleted, the corresponding Session may not be deleted
             });
         }
 

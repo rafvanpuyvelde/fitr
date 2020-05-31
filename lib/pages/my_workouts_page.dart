@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
+import 'package:fitr/components/login-form.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
@@ -31,6 +31,8 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
       'Authorization': 'Bearer ${widget.user.token}'
     });
 
+    if (response.statusCode == 401) logout();
+
     List<Workout> workouts = (json.decode(response.body) as List)
         .map((i) => Workout.fromJson(i))
         .toList();
@@ -38,8 +40,11 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
     return response.statusCode == 200 ? workouts : null;
   }
 
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
+  }
+
   onWorkoutTapped(Workout workout) {
-    log(workout.id.toString());
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -79,7 +84,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                     style: TextStyle(
                         color: globals.primaryTextColor,
                         fontSize: 36,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                         fontStyle: FontStyle.normal,
                         fontFamily: 'Roboto',
                         letterSpacing: 0.5)),
@@ -136,7 +141,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                                                           color: globals
                                                               .primaryTextColor,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                              FontWeight.w900,
                                                           fontSize: 16,
                                                           letterSpacing: 0.5),
                                                     ),

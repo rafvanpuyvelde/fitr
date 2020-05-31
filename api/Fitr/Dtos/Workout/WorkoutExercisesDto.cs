@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Fitr.Data;
 
 namespace Fitr.Dtos.Workout
 {
@@ -8,6 +8,10 @@ namespace Fitr.Dtos.Workout
 
         public string Name { get; set; }
 
-        public ICollection<WorkoutSetDto> Sets { get; set; }
+        public string Unit { get; set; }
+
+        public double Record { get; set; }
+
+        public double Trend { get; set; }
     }
 }

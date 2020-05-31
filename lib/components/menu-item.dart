@@ -24,7 +24,7 @@ class _MenuItemState extends State<MenuItem> {
         title: Text(
           widget.text,
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: globals.primaryTextColor),
+              fontWeight: FontWeight.w900, color: globals.primaryTextColor),
         ),
         onTap: () {
           Navigator.pop(context);

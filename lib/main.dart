@@ -16,6 +16,7 @@ class FitrApp extends StatefulWidget {
 class FitrAppState extends State<FitrApp> {
   final _routes = {
     '/dashboard': (context) => DashboardPage(),
+    '/login': (context) => LoginForm(),
   };
 
   @override

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using static Fitr.Data.Enums;
+﻿using static Fitr.Data.Enums;
 
 namespace Fitr.Models
 {
@@ -9,7 +8,7 @@ namespace Fitr.Models
         
         public int ExerciseId { get; set; }
         
-        public Exercise Exercise { get; set; }
+        public virtual Exercise Exercise { get; set; }
         
         public double Weight { get; set; }
         
@@ -19,6 +18,10 @@ namespace Fitr.Models
         
         public bool UsesChains { get; set; }
 
-        public ICollection<Rep> Reps { get; set; }
+        public int Reps { get; set; }
+
+        public int SessionId { get; set; }
+
+        public Session Session { get; set; }
     }
 }

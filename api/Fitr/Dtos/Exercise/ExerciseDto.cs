@@ -12,5 +12,7 @@ namespace Fitr.Dtos.Exercise
         public ICollection<SetDto> Sets { get; set; }
         
         public ICollection<ExerciseWorkoutDto> Workouts { get; set; }
+
+        public ICollection<ExerciseSessionsDto> Sessions { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Fitr.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -189,30 +189,6 @@ namespace Fitr.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sets",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExerciseId = table.Column<int>(nullable: false),
-                    Weight = table.Column<double>(nullable: false),
-                    Unit = table.Column<int>(nullable: false),
-                    UsesBands = table.Column<bool>(nullable: false),
-                    UsesChains = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sets", x => x.Id);
-                    table.CheckConstraint("CK_Sets_Unit_Enum_Constraint", "[Unit] IN(0, 1)");
-                    table.ForeignKey(
-                        name: "FK_Sets_Exercises_ExerciseId",
-                        column: x => x.ExerciseId,
-                        principalTable: "Exercises",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sessions",
                 columns: table => new
                 {
@@ -257,28 +233,33 @@ namespace Fitr.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reps",
+                name: "Sets",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<int>(nullable: false),
-                    SetId = table.Column<int>(nullable: false),
-                    ExerciseId = table.Column<int>(nullable: false)
+                    ExerciseId = table.Column<int>(nullable: false),
+                    Weight = table.Column<double>(nullable: false),
+                    Unit = table.Column<int>(nullable: false),
+                    UsesBands = table.Column<bool>(nullable: false),
+                    UsesChains = table.Column<bool>(nullable: false),
+                    Reps = table.Column<int>(nullable: false),
+                    SessionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reps", x => x.Id);
+                    table.PrimaryKey("PK_Sets", x => x.Id);
+                    table.CheckConstraint("CK_Sets_Unit_Enum_Constraint", "[Unit] IN(0, 1)");
                     table.ForeignKey(
-                        name: "FK_Reps_Exercises_ExerciseId",
+                        name: "FK_Sets_Exercises_ExerciseId",
                         column: x => x.ExerciseId,
                         principalTable: "Exercises",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reps_Sets_SetId",
-                        column: x => x.SetId,
-                        principalTable: "Sets",
+                        name: "FK_Sets_Sessions_SessionId",
+                        column: x => x.SessionId,
+                        principalTable: "Sessions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -323,16 +304,6 @@ namespace Fitr.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reps_ExerciseId",
-                table: "Reps",
-                column: "ExerciseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reps_SetId",
-                table: "Reps",
-                column: "SetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sessions_WorkoutId",
                 table: "Sessions",
                 column: "WorkoutId");
@@ -341,6 +312,11 @@ namespace Fitr.Migrations
                 name: "IX_Sets_ExerciseId",
                 table: "Sets",
                 column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sets_SessionId",
+                table: "Sets",
+                column: "SessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkoutHasExercises_ExerciseId",
@@ -371,10 +347,7 @@ namespace Fitr.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Reps");
-
-            migrationBuilder.DropTable(
-                name: "Sessions");
+                name: "Sets");
 
             migrationBuilder.DropTable(
                 name: "WorkoutHasExercises");
@@ -383,13 +356,13 @@ namespace Fitr.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Sets");
-
-            migrationBuilder.DropTable(
-                name: "Workouts");
+                name: "Sessions");
 
             migrationBuilder.DropTable(
                 name: "Exercises");
+
+            migrationBuilder.DropTable(
+                name: "Workouts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

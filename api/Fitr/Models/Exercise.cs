@@ -8,8 +8,8 @@ namespace Fitr.Models
 
         public string Name { get; set; }
 
-        public ICollection<Set> Sets { get; set; }
+        public virtual ICollection<Set> Sets { get; set; }
         
-        public ICollection<WorkoutHasExercise> Workouts { get; set; }
+        public virtual ICollection<WorkoutHasExercise> Workouts { get; set; }
     }
 }

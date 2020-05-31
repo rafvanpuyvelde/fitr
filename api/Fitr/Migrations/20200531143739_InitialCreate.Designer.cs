@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fitr.Migrations
 {
     [DbContext(typeof(FitrContext))]
-    [Migration("20200419141105_initialcreate")]
-    partial class initialcreate
+    [Migration("20200531143739_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,31 +34,6 @@ namespace Fitr.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Exercises");
-                });
-
-            modelBuilder.Entity("Fitr.Models.Rep", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ExerciseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.HasIndex("SetId");
-
-                    b.ToTable("Reps");
                 });
 
             modelBuilder.Entity("Fitr.Models.Session", b =>
@@ -91,6 +66,12 @@ namespace Fitr.Migrations
                     b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Reps")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Unit")
                         .HasColumnType("int");
 
@@ -106,6 +87,8 @@ namespace Fitr.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExerciseId");
+
+                    b.HasIndex("SessionId");
 
                     b.ToTable("Sets");
 
@@ -353,21 +336,6 @@ namespace Fitr.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Fitr.Models.Rep", b =>
-                {
-                    b.HasOne("Fitr.Models.Exercise", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fitr.Models.Set", "Set")
-                        .WithMany("Reps")
-                        .HasForeignKey("SetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Fitr.Models.Session", b =>
                 {
                     b.HasOne("Fitr.Models.Workout", "Workout")
@@ -382,6 +350,12 @@ namespace Fitr.Migrations
                     b.HasOne("Fitr.Models.Exercise", "Exercise")
                         .WithMany("Sets")
                         .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Fitr.Models.Session", "Session")
+                        .WithMany("Sets")
+                        .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

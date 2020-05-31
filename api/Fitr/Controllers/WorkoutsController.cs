@@ -21,6 +21,29 @@ namespace Fitr.Controllers
         }
 
         /// <summary>
+        /// Get a Workout by it's id for a given user.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /workout/1
+        ///
+        /// </remarks>
+        /// <returns>The requested workout details</returns>
+        /// <response code="200">Returns the workout</response>
+        /// <response code="401">If the user is unauthorized</response>  
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<WorkoutDto>>> Get(int id)
+        {
+            var currentUserId = GetCurrentUserId();
+
+            if (string.IsNullOrEmpty(currentUserId))
+                return Unauthorized(new { message = "Unable to fetch workouts, no user is currently logged in." });
+
+            return Ok(await _workoutRepository.Get(currentUserId, id));
+        }
+
+        /// <summary>
         /// Gets all Workouts for a given user.
         /// </summary>
         /// <remarks>
@@ -29,7 +52,7 @@ namespace Fitr.Controllers
         ///     GET /workouts
         ///
         /// </remarks>
-        /// <returns>A newly created TodoItem</returns>
+        /// <returns>A list of workouts</returns>
         /// <response code="200">Returns the workouts</response>
         /// <response code="401">If the user is unauthorized</response>  
         [HttpGet]

@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'package:fitr/components/exercise-card.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
+import 'package:fitr/models/workout_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class WorkoutDetailPage extends StatefulWidget {
   final User user;
@@ -16,38 +20,50 @@ class WorkoutDetailPage extends StatefulWidget {
 
 class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  WorkoutDetail _workoutDetail;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchWorkoutDetails().then((value) => {
+          setState(() => {_workoutDetail = value})
+        });
+  }
+
+  Future<WorkoutDetail> fetchWorkoutDetails() async {
+    var url = globals.baseApiUrl;
+
+    final response = await http.get('$url/api/workouts/${widget.workout.id}',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.user.token}'
+        });
+
+    if (response.statusCode == 401) logout();
+
+    WorkoutDetail workout = WorkoutDetail.fromJson(json.decode(response.body));
+
+    return response.statusCode == 200 ? workout : null;
+  }
+
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
+  }
 
   getExercises() {
     var exercises = new List<Widget>();
 
-    if (widget.workout.exercises != null &&
-        widget.workout.exercises.length > 0) {
-      for (var exercise in widget.workout.exercises) {
-        exercises.add(getExerciseCard(exercise.name));
+    if (_workoutDetail.exercises != null &&
+        _workoutDetail.exercises.length > 0) {
+      for (var exercise in _workoutDetail.exercises) {
+        exercises.add(new ExerciseCard(exercise));
       }
     } else {
       return new Text('No exercises yet ...');
     }
 
     return exercises;
-  }
-
-  getExerciseCard(String exerciseName) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 30.0, bottom: 30.0, left: 15.0, right: 10.0),
-      child: Card(
-          child: InkWell(
-        splashColor: Colors.blue.withAlpha(30),
-        onTap: () {
-          print('Card tapped.');
-        },
-        child: Container(
-          width: 300,
-          child: Text(exerciseName),
-        ),
-      )),
-    );
   }
 
   @override
@@ -72,22 +88,21 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(top: 57, left: 18),
-                  child: Text(widget.workout.name,
+                  child: Text(_workoutDetail.name,
                       style: TextStyle(
                           color: globals.primaryTextColor,
                           fontSize: 36,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                           fontStyle: FontStyle.normal,
-                          fontFamily: 'Roboto',
                           letterSpacing: 0.5)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 18),
                   child: Text(
-                      '${widget.workout.exercises.length.toString()} exercises',
+                      '${_workoutDetail.exercises.length.toString()} exercises',
                       style: TextStyle(
                         color: globals.secondaryTextColor,
-                        fontSize: 18,
+                        fontSize: 17,
                       )),
                 ),
                 Expanded(
@@ -105,30 +120,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      OutlineButton(
-                        onPressed: null,
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 11, 127, 222),
-                            width: 1,
-                            style: BorderStyle.solid),
-                        disabledBorderColor: Colors.white,
-                        child: Text(
-                          'Set active',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25.0),
-                        child: RaisedButton(
-                          color: Color.fromARGB(255, 11, 127, 222),
-                          onPressed: () {},
-                          child: const Text('Start workout',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
-                        ),
-                      )
-                    ],
+                    children: <Widget>[],
                   ),
                 )
               ],
