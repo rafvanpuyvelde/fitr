@@ -96,7 +96,10 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(top: 57, left: 18),
-                          child: Text(_workoutDetail.name,
+                          child: Text(
+                              (_workoutDetail != null)
+                                  ? _workoutDetail.name
+                                  : 'Workout',
                               style: TextStyle(
                                   color: globals.primaryTextColor,
                                   fontSize: 36,
@@ -107,7 +110,9 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 18),
                           child: Text(
-                              '${_workoutDetail.exercises.length.toString()} exercises',
+                              (_workoutDetail != null)
+                                  ? '${_workoutDetail.exercises.length.toString()} exercises'
+                                  : 'Loading exercises',
                               style: TextStyle(
                                 color: globals.secondaryTextColor,
                                 fontSize: 17,
@@ -127,7 +132,9 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                   fontStyle: FontStyle.normal,
                                   letterSpacing: 0.5)),
                           Switch(
-                            value: _workoutDetail.isActive,
+                            value: (_workoutDetail != null)
+                                ? _workoutDetail.isActive
+                                : false,
                             onChanged: (value) {},
                             activeTrackColor: globals.secondaryTextColor,
                             activeColor: globals.infoColor,
@@ -137,16 +144,27 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                     )
                   ],
                 ),
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Container(
-                    child: ListView(
-                      children: getExercises(),
-                      scrollDirection: Axis.horizontal,
-                    ),
-                  ),
-                )),
+                FutureBuilder(
+                    future: fetchWorkoutDetails(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Expanded(
+                            child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Container(
+                                  child: ListView(
+                                    children: getExercises(),
+                                    scrollDirection: Axis.horizontal,
+                                  ),
+                                )));
+                      } else {
+                        return Container(
+                            child: Expanded(
+                                child: Center(
+                                    child: CircularProgressIndicator())));
+                      }
+                    }),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 45.0),
                   child: Center(
