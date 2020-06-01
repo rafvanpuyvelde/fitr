@@ -85,17 +85,19 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     ),
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 24),
+                        padding: const EdgeInsets.only(top: 24, bottom: 24),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
                           children: <Widget>[
                             Text(widget.exercise.trend.toString(),
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     fontSize: 96,
                                     fontWeight: FontWeight.w800,
-                                    fontStyle: FontStyle.normal)),
+                                    fontStyle: FontStyle.normal,
+                                    letterSpacing: -8)),
                             Text('%',
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),

@@ -86,28 +86,60 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 57, left: 18),
-                  child: Text(_workoutDetail.name,
-                      style: TextStyle(
-                          color: globals.primaryTextColor,
-                          fontSize: 36,
-                          fontWeight: FontWeight.w900,
-                          fontStyle: FontStyle.normal,
-                          letterSpacing: 0.5)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18),
-                  child: Text(
-                      '${_workoutDetail.exercises.length.toString()} exercises',
-                      style: TextStyle(
-                        color: globals.secondaryTextColor,
-                        fontSize: 17,
-                      )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 57, left: 18),
+                          child: Text(_workoutDetail.name,
+                              style: TextStyle(
+                                  color: globals.primaryTextColor,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w900,
+                                  fontStyle: FontStyle.normal,
+                                  letterSpacing: 0.5)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18),
+                          child: Text(
+                              '${_workoutDetail.exercises.length.toString()} exercises',
+                              style: TextStyle(
+                                color: globals.secondaryTextColor,
+                                fontSize: 17,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 57.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text('Active',
+                              style: TextStyle(
+                                  color: globals.secondaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal,
+                                  letterSpacing: 0.5)),
+                          Switch(
+                            value: _workoutDetail.isActive,
+                            onChanged: (value) {},
+                            activeTrackColor: globals.secondaryTextColor,
+                            activeColor: globals.infoColor,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 Expanded(
                     child: Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 40),
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Container(
                     child: ListView(
                       children: getExercises(),
@@ -116,12 +148,28 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                   ),
                 )),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 70),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[],
-                  ),
+                  padding: const EdgeInsets.only(bottom: 45.0),
+                  child: Center(
+                      child: Card(
+                    child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                        print('Card tapped.');
+                      },
+                      child: Container(
+                        width: 360,
+                        height: 70,
+                        child: Center(
+                          child: Text('Start workout',
+                              style: TextStyle(
+                                  color: globals.primaryTextColor,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1)),
+                        ),
+                      ),
+                    ),
+                  )),
                 )
               ],
             ),
