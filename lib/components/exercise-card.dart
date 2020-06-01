@@ -1,12 +1,15 @@
 import 'dart:math';
+import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout_detail_exercise.dart';
+import 'package:fitr/pages/exercise_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
 
 class ExerciseCard extends StatefulWidget {
   final ExerciseDetail exercise;
+  final User user;
 
-  ExerciseCard(this.exercise, {Key key}) : super(key: key);
+  ExerciseCard(this.exercise, this.user, {Key key}) : super(key: key);
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -31,6 +34,14 @@ class _ExerciseCardState extends State<ExerciseCard> {
         : widget.exercise.name;
   }
 
+  onExerciseTapped(ExerciseDetail exercise) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ExerciseDetailPage(exercise, widget.user)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,9 +52,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              print('Card tapped.');
-            },
+            onTap: () => onExerciseTapped(widget.exercise),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: Container(
