@@ -104,51 +104,75 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                                     return Padding(
                                       padding: const EdgeInsets.only(
                                           bottom: 8, left: 18, right: 18),
-                                      child: InkWell(
-                                        onTap: () {
-                                          onWorkoutTapped(snapshot.data[index]);
-                                        },
-                                        child: Container(
-                                            height: 50,
-                                            color: globals.secondaryColor,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      left: BorderSide(
-                                                          color: snapshot
-                                                                  .data[index]
-                                                                  .isActive
-                                                              ? Color.fromARGB(
-                                                                  255,
-                                                                  11,
-                                                                  127,
-                                                                  222)
-                                                              : Colors
-                                                                  .transparent,
-                                                          width: 6))),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 31),
-                                                    child: Text(
-                                                      '${snapshot.data[index].name}'
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color: globals
-                                                              .primaryTextColor,
-                                                          fontWeight:
-                                                              FontWeight.w900,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.5),
-                                                    ),
-                                                  ),
-                                                ],
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  onWorkoutTapped(
+                                                      snapshot.data[index]);
+                                                },
+                                                child: Container(
+                                                    height: 60,
+                                                    color:
+                                                        globals.secondaryColor,
+                                                    child: Container(
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 31),
+                                                            child: Text(
+                                                              '${snapshot.data[index].name}',
+                                                              style: TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          48,
+                                                                          57,
+                                                                          71),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                  fontSize: 16,
+                                                                  letterSpacing:
+                                                                      0.2),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 20),
+                                                            child: Icon(
+                                                                Icons
+                                                                    .fiber_manual_record,
+                                                                color: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .isActive
+                                                                    ? globals
+                                                                        .infoColor
+                                                                    : Colors
+                                                                        .transparent),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )),
                                               ),
-                                            )),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   }));
