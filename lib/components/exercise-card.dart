@@ -25,6 +25,12 @@ class _ExerciseCardState extends State<ExerciseCard> {
     return gradients[random.nextInt(gradients.length)];
   }
 
+  String getExerciseName() {
+    return (widget.exercise.name.length >= 12)
+        ? widget.exercise.name.substring(0, 11) + '...'
+        : widget.exercise.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -55,7 +61,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                   children: <Widget>[
                     Padding(
                         padding: const EdgeInsets.only(top: 50, left: 40),
-                        child: Text(widget.exercise.name,
+                        child: Text(getExerciseName(),
                             style: TextStyle(
                                 color: Color.fromARGB(255, 255, 255, 255),
                                 fontSize: 29,
