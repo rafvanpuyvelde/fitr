@@ -169,6 +169,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                   padding: const EdgeInsets.only(bottom: 45.0),
                   child: Center(
                       child: Card(
+                    elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: InkWell(
