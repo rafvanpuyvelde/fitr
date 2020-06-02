@@ -49,6 +49,39 @@ namespace Fitr.Repositories.Workout
             throw new System.NotImplementedException();
         }
 
+        public async Task<WorkoutExerciseSessionDetailDto> GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)
+        {
+            var sessions = _context.Sessions
+                .Include(s => s.Sets)
+                .ThenInclude(s => s.Exercise)
+                .Include(s => s.Workout)
+                .ThenInclude(w => w.Exercises)
+                .Where(s => s.WorkoutId == workoutId);
+
+            var result = new WorkoutExerciseSessionDetailDto
+            {
+                ExerciseId = exerciseId,
+                ExerciseName = sessions.First().Sets.First().Exercise.Name,
+                WorkoutId = workoutId,
+                WorkoutName = sessions.First().Workout.Name,
+                Sessions = new List<WorkoutExerciseSession>()
+            };
+
+            foreach (var session in sessions)
+            {
+                result.Sessions.Add(new WorkoutExerciseSession
+                {
+                    Date = session.Date,
+                    Id = session.Id,
+                    Sets = session.Sets.Count,
+                    Reps = session.Sets.Where(x => x.ExerciseId == exerciseId).Select(x => x.Reps).ToArray(),
+                    Weight = session.Sets.Where(y => y.ExerciseId == exerciseId).Select(y => y.Weight).ToArray()
+                });
+            }
+
+            return result;
+        }
+
         private Task UpdateExerciseTrends(WorkoutDetailDto workout)
         {
             // Get list of sets from db
@@ -100,9 +133,13 @@ namespace Fitr.Repositories.Workout
                 foreach (var set in exercise)
                 {
                     if (!performanceDictionary.ContainsKey(exercise.Key))
+                    {
                         performanceDictionary.Add(exercise.Key, set.Reps * set.Weight);
+                    }
                     else
+                    {
                         performanceDictionary[exercise.Key] = set.Reps * set.Weight + performanceDictionary[exercise.Key];
+                    }
                 }
             }
 
@@ -126,34 +163,12 @@ namespace Fitr.Repositories.Workout
                         Id = e.ExerciseId,
                         Name = e.Exercise.Name,
                         Record = e.Exercise.Sets.Max(set => set.Weight),
-                        Unit = e.Exercise.Sets.First().Unit.ToString(),
+                        Unit = e.Exercise.Sets.First().Unit.ToString()
                     }).ToList()
                 })
                 .AsNoTracking()
                 .FirstAsync()
                 .ConfigureAwait(false);
         }
-
-        /*private async Task UpdateExerciseTrends(WorkoutDetailDto workout)
-        {
-            // Get exercise id's from workout
-            var exerciseIds = workout.Exercises.Select(exercise => exercise.Id).ToArray();
-
-            // Get list of exercises from db
-            var exercises = GetExercises(exerciseIds);
-
-            // Calculate trend for each exercise
-            foreach (var exercise in exercises)
-            {
-            }
-        }
-
-        private IEnumerable<Exercise> GetExercises(int[] exerciseIds)
-        {
-            return _context.Exercises
-                .Where(exercise => exerciseIds.Contains(exercise.Id))
-                .AsNoTracking()
-                .ToList();
-        }*/
     }
 }

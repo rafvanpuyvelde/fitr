@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fitr.Dtos.Workout;
 using Fitr.Repositories.Workout;
@@ -14,6 +15,8 @@ namespace Fitr.Controllers
     public class WorkoutsController : Controller
     {
         private readonly IWorkoutRepository _workoutRepository;
+
+        private string CurrentUserId => User.Identity?.Name;
 
         public WorkoutsController(IWorkoutRepository workoutRepository)
         {
@@ -35,12 +38,34 @@ namespace Fitr.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<WorkoutDto>>> Get(int id)
         {
-            var currentUserId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(CurrentUserId))
+                return Unauthorized(new { message = $"Unable to fetch workout with id {id}, no user is currently logged in." });
 
-            if (string.IsNullOrEmpty(currentUserId))
-                return Unauthorized(new { message = "Unable to fetch workouts, no user is currently logged in." });
+            return Ok(await _workoutRepository.Get(CurrentUserId, id));
+        }
 
-            return Ok(await _workoutRepository.Get(currentUserId, id));
+        /// <summary>
+        /// Gets the Sessions for a given exercise for a given Workout.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /workout/1/exercises/1/sessions
+        ///
+        /// </remarks>
+        /// <returns>The requested workout exercise sessions</returns>
+        /// <response code="200">Returns the workout exercise sessions</response>
+        /// <response code="401">If the user is unauthorized</response>  
+        [HttpGet("{workoutId}/exercises/{exerciseId}/sessions")]
+        public async Task<ActionResult<IEnumerable<WorkoutDto>>> GetSessions(int workoutId, int exerciseId)
+        {
+            if (string.IsNullOrEmpty(CurrentUserId))
+                return Unauthorized(new { message = $"Unable to fetch exercise sessions for workout with id {workoutId}, no user is currently logged in." });
+
+            if (!await ExerciseIsPartOfProvidedWorkout(exerciseId, workoutId))
+                return NotFound(new { message = $"Unable to fetch exercise sessions for workout with id { workoutId}, the exercise with id {exerciseId} is not a part of the provided workout." });
+
+            return Ok(await _workoutRepository.GetExerciseSessions(CurrentUserId, workoutId, exerciseId));
         }
 
         /// <summary>
@@ -58,17 +83,17 @@ namespace Fitr.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkoutDto>>> GetAll()
         {
-            var currentUserId = GetCurrentUserId();
-
-            if (string.IsNullOrEmpty(currentUserId))
+            if (string.IsNullOrEmpty(CurrentUserId))
                 return Unauthorized(new { message = "Unable to fetch workouts, no user is currently logged in." });
 
-            return Ok(await _workoutRepository.GetAll(currentUserId));
+            return Ok(await _workoutRepository.GetAll(CurrentUserId));
         }
 
-        private string GetCurrentUserId()
+        private async Task<bool> ExerciseIsPartOfProvidedWorkout(int exerciseId, int workoutId)
         {
-            return User.Identity?.Name;
+            var workout = await _workoutRepository.Get(CurrentUserId, workoutId);
+
+            return workout.Exercises.Any(exercise => exercise.Id == exerciseId);
         }
     }
 }
