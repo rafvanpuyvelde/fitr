@@ -57,7 +57,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     if (_workoutDetail.exercises != null &&
         _workoutDetail.exercises.length > 0) {
       for (var exercise in _workoutDetail.exercises) {
-        exercises.add(new ExerciseCard(exercise, widget.user));
+        exercises
+            .add(new ExerciseCard(exercise, widget.user, widget.workout.id));
       }
     } else {
       return new Text('No exercises yet ...');

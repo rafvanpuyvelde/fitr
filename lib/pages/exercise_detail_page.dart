@@ -1,16 +1,21 @@
+import 'dart:convert';
+import 'package:fitr/components/exercise-session-graph.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout_detail_exercise.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:fitr/models/workout_exercise_session_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fitr/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class ExerciseDetailPage extends StatefulWidget {
   final ExerciseDetail exercise;
   final User user;
+  final int workoutId;
 
-  ExerciseDetailPage(this.exercise, this.user, {Key key}) : super(key: key);
+  ExerciseDetailPage(this.exercise, this.user, this.workoutId, {Key key})
+      : super(key: key);
 
   @override
   _ExerciseDetailPageState createState() => _ExerciseDetailPageState();
@@ -19,10 +24,27 @@ class ExerciseDetailPage extends StatefulWidget {
 class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  var gradientColors = [
-    const Color.fromARGB(255, 146, 44, 249),
-    globals.primaryColor //     const Color.fromARGB(255, 249, 178, 191),
-  ];
+  Future<WorkoutExerciseSessionDetail> fetchExerciseSessionDetail() async {
+    var url = globals.baseApiUrl;
+
+    final response = await http.get(
+        '$url/api/workouts/${widget.workoutId}/exercises/${widget.exercise.id}/sessions',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.user.token}'
+        });
+
+    if (response.statusCode == 401) logout();
+
+    WorkoutExerciseSessionDetail workouts =
+        WorkoutExerciseSessionDetail.fromJson(json.decode(response.body));
+
+    return response.statusCode == 200 ? workouts : null;
+  }
+
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,76 +95,20 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                   )
                 ],
               ),
-              Stack(children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.70,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                      Radius.circular(18),
-                    )),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 0, left: 0, top: 0, bottom: 0),
-                      child: LineChart(
-                        mainData(),
-                      ),
-                    ),
-                  ),
-                )
-              ]),
+              FutureBuilder(
+                  future: fetchExerciseSessionDetail(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return ExerciseSessionGraph(snapshot.data);
+                    } else {
+                      return Container(
+                          child: Expanded(
+                              child:
+                                  Center(child: CircularProgressIndicator())));
+                    }
+                  })
             ],
           ),
         ));
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(show: false, drawVerticalLine: false),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: false,
-          reservedSize: 22,
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: false,
-          reservedSize: 28,
-        ),
-      ),
-      borderData: FlBorderData(
-        show: false,
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 10,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.5)).toList(),
-          ),
-        ),
-      ],
-    );
   }
 }

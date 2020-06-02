@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:fitr/components/login-form.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';

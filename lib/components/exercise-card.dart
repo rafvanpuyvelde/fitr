@@ -8,8 +8,10 @@ import 'package:fitr/globals.dart' as globals;
 class ExerciseCard extends StatefulWidget {
   final ExerciseDetail exercise;
   final User user;
+  final int workoutId;
 
-  ExerciseCard(this.exercise, this.user, {Key key}) : super(key: key);
+  ExerciseCard(this.exercise, this.user, this.workoutId, {Key key})
+      : super(key: key);
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -39,7 +41,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) =>
-                ExerciseDetailPage(exercise, widget.user)));
+                ExerciseDetailPage(exercise, widget.user, widget.workoutId)));
   }
 
   @override
