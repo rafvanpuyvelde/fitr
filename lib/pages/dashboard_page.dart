@@ -30,17 +30,33 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 30),
-                child: Text('Welcome ${widget.user.name}',
-                    style: TextStyle(
-                        color: globals.primaryTextColor,
-                        decoration: TextDecoration.none,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.normal,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5)),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 30),
+                    child: Text('Welcome ',
+                        style: TextStyle(
+                            color: globals.primaryTextColor,
+                            decoration: TextDecoration.none,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'Roboto',
+                            letterSpacing: 0.5)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Text('${widget.user.name}',
+                        style: TextStyle(
+                            color: globals.secondaryTextColor,
+                            decoration: TextDecoration.none,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'Roboto',
+                            letterSpacing: 0.5)),
+                  ),
+                ],
               ),
               Expanded(
                   child: GridView.count(
