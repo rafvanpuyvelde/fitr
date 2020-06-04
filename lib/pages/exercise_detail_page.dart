@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:fitr/components/exercise-session-graph.dart';
+import 'package:fitr/components/exercise-session-table.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout_detail_exercise.dart';
@@ -99,7 +99,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                   future: fetchExerciseSessionDetail(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      return ExerciseSessionGraph(snapshot.data);
+                      return ExerciseSessionTable(snapshot.data);
                     } else {
                       return Container(
                           child: Expanded(
