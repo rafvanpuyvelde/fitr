@@ -17,7 +17,7 @@ class _ExerciseSessionTableState extends State<ExerciseSessionTable> {
   List<Widget> getListViewChildren() {
     var children = new List<Widget>();
 
-    for (var i = 0; i < widget.data.sessions.length; i++) {
+    for (var i = widget.data.sessions.length - 1; i >= 0; i--) {
       children.add(getWorkoutSession(widget.data.sessions[i]));
     }
 
@@ -89,14 +89,37 @@ class _ExerciseSessionTableState extends State<ExerciseSessionTable> {
                 ),
                 Row(
                   children: <Widget>[
-                    Text('${session.reps[setIndex].toString()} x'),
-                    Text('↑ ${session.weight[setIndex].toString()}')
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text('${session.reps[setIndex].toString()} x',
+                          style: TextStyle(
+                              color: globals.secondaryTextColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.05)),
+                    ),
+                    getExerciseWeightProgression(session, setIndex)
                   ],
                 )
               ],
             ),
           ),
         ));
+  }
+
+  Text getExerciseWeightProgression(
+      WorkoutExerciseSession session, int setIndex) {
+    bool isAnIncreaseInIntensity = true;
+
+    return Text(
+        '${isAnIncreaseInIntensity ? '↑' : '↓'} ${session.weight[setIndex].toString()} kg',
+        style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 17,
+            letterSpacing: 0.05,
+            color: isAnIncreaseInIntensity
+                ? Color.fromARGB(255, 68, 195, 143)
+                : Color.fromARGB(255, 225, 87, 127)));
   }
 
   @override
