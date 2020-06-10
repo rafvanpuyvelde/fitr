@@ -21,36 +21,6 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   Future<List<Workout>> _futureWorkouts;
 
-  Future<List<Workout>> fetchWorkouts() async {
-    var url = globals.baseApiUrl;
-
-    final response =
-        await http.get('$url/api/workouts', headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.user.token}'
-    });
-
-    if (response.statusCode == 401) logout();
-
-    List<Workout> workouts = (json.decode(response.body) as List)
-        .map((i) => Workout.fromJson(i))
-        .toList();
-
-    return response.statusCode == 200 ? workouts : null;
-  }
-
-  void logout() {
-    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
-  }
-
-  onWorkoutTapped(Workout workout) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) =>
-                WorkoutDetailPage(widget.user, workout: workout)));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -95,90 +65,100 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         } else {
-                          return Container(
-                              child: ListView.builder(
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 8, left: 18, right: 18),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  onWorkoutTapped(
-                                                      snapshot.data[index]);
-                                                },
-                                                child: Container(
-                                                    height: 60,
-                                                    color:
-                                                        globals.secondaryColor,
-                                                    child: Container(
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 31),
-                                                            child: Text(
-                                                              '${snapshot.data[index].name}',
-                                                              style: TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          48,
-                                                                          57,
-                                                                          71),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w900,
-                                                                  fontSize: 16,
-                                                                  letterSpacing:
-                                                                      0.2),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 20),
-                                                            child: Icon(
-                                                                Icons
-                                                                    .fiber_manual_record,
-                                                                color: snapshot
-                                                                        .data[
-                                                                            index]
-                                                                        .isActive
-                                                                    ? globals
-                                                                        .infoColor
-                                                                    : Colors
-                                                                        .transparent),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }));
+                          return Container(child: getListViewBuilder(snapshot));
                         }
                       })),
             ],
           ),
         )));
+  }
+
+  getListViewBuilder(AsyncSnapshot<dynamic> snapshot) {
+    return ListView.builder(
+        itemCount: snapshot.data.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 18, right: 18),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        onWorkoutTapped(snapshot.data, index);
+                      },
+                      child: Container(
+                          height: 60,
+                          color: globals.secondaryColor,
+                          child: Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 31),
+                                  child: Text(
+                                    '${snapshot.data[index].name}',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 48, 57, 71),
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 16,
+                                        letterSpacing: 0.2),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Icon(Icons.fiber_manual_record,
+                                      color: snapshot.data[index].isActive
+                                          ? globals.infoColor
+                                          : Colors.transparent),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<List<Workout>> fetchWorkouts() async {
+    var url = globals.baseApiUrl;
+
+    final response =
+        await http.get('$url/api/workouts', headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.user.token}'
+    });
+
+    if (response.statusCode == 401) logout();
+
+    List<Workout> workouts = (json.decode(response.body) as List)
+        .map((i) => Workout.fromJson(i))
+        .toList();
+
+    return response.statusCode == 200 ? workouts : null;
+  }
+
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
+  }
+
+  onWorkoutTapped(List<Workout> workouts, int workoutId) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) =>
+                WorkoutDetailPage(widget.user, workouts, workoutId, refresh)));
+  }
+
+  refresh() {
+    setState(() {
+      _futureWorkouts = fetchWorkouts();
+    });
   }
 }

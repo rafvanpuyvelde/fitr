@@ -9,10 +9,14 @@ import 'package:fitr/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class WorkoutDetailPage extends StatefulWidget {
+  final Function() notifyParent;
   final User user;
-  final Workout workout;
+  final List<Workout> workouts;
+  final int workoutId;
 
-  WorkoutDetailPage(this.user, {this.workout, Key key}) : super(key: key);
+  WorkoutDetailPage(this.user, this.workouts, this.workoutId, this.notifyParent,
+      {Key key})
+      : super(key: key);
 
   @override
   _WorkoutDetailPageState createState() => _WorkoutDetailPageState();
@@ -29,42 +33,6 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     fetchWorkoutDetails().then((value) => {
           setState(() => {_workoutDetail = value})
         });
-  }
-
-  Future<WorkoutDetail> fetchWorkoutDetails() async {
-    var url = globals.baseApiUrl;
-
-    final response = await http.get('$url/api/workouts/${widget.workout.id}',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${widget.user.token}'
-        });
-
-    if (response.statusCode == 401) logout();
-
-    WorkoutDetail workout = WorkoutDetail.fromJson(json.decode(response.body));
-
-    return response.statusCode == 200 ? workout : null;
-  }
-
-  void logout() {
-    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
-  }
-
-  getExercises() {
-    var exercises = new List<Widget>();
-
-    if (_workoutDetail.exercises != null &&
-        _workoutDetail.exercises.length > 0) {
-      for (var exercise in _workoutDetail.exercises) {
-        exercises
-            .add(new ExerciseCard(exercise, widget.user, widget.workout.id));
-      }
-    } else {
-      return new Text('No exercises yet ...');
-    }
-
-    return exercises;
   }
 
   @override
@@ -136,7 +104,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                             value: (_workoutDetail != null)
                                 ? _workoutDetail.isActive
                                 : false,
-                            onChanged: (value) {},
+                            onChanged: (value) => updateWorkoutActivityStatus(),
                             activeTrackColor: globals.secondaryTextColor,
                             activeColor: globals.infoColor,
                           ),
@@ -197,5 +165,64 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
             ),
           ),
         ));
+  }
+
+  Future<WorkoutDetail> fetchWorkoutDetails() async {
+    var url = globals.baseApiUrl;
+
+    final response = await http.get(
+        '$url/api/workouts/${widget.workouts[widget.workoutId].id}',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.user.token}'
+        });
+
+    if (response.statusCode == 401) logout();
+
+    WorkoutDetail workout = WorkoutDetail.fromJson(json.decode(response.body));
+
+    return response.statusCode == 200 ? workout : null;
+  }
+
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
+  }
+
+  getExercises() {
+    var exercises = new List<Widget>();
+
+    if (_workoutDetail.exercises != null &&
+        _workoutDetail.exercises.length > 0) {
+      for (var exercise in _workoutDetail.exercises) {
+        exercises.add(new ExerciseCard(
+            exercise, widget.user, widget.workouts[widget.workoutId].id));
+      }
+    }
+
+    return exercises;
+  }
+
+  void updateWorkoutActivityStatus() async {
+    if (!_workoutDetail.isActive) {
+      var url = globals.baseApiUrl;
+
+      var body = json.encode({"isActive": !_workoutDetail.isActive});
+
+      final response =
+          await http.patch('$url/api/workouts/${_workoutDetail.id}',
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ${widget.user.token}'
+              },
+              body: body);
+
+      response.statusCode == 401
+          ? logout()
+          : fetchWorkoutDetails().then((value) => {
+                setState(() => {_workoutDetail = value})
+              });
+
+      widget.notifyParent();
+    }
   }
 }

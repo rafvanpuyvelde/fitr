@@ -49,7 +49,7 @@ namespace Fitr.Repositories.Workout
             throw new System.NotImplementedException();
         }
 
-        public async Task<WorkoutExerciseSessionDetailDto> GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)
+        public WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)
         {
             var sessions = _context.Sessions
                 .Include(s => s.Sets)
@@ -80,6 +80,13 @@ namespace Fitr.Repositories.Workout
             }
 
             return result;
+        }
+
+        public async Task ToggleActiveWorkout(string currentUserId, int workoutId)
+        {
+            _context.Workouts.ToList().ForEach(workout => { workout.IsActive = workout.Id == workoutId; });
+
+            await _context.SaveChangesAsync();
         }
 
         private Task UpdateExerciseTrends(WorkoutDetailDto workout)

@@ -12,6 +12,8 @@ namespace Fitr.Repositories.Workout
         
         Task<WorkoutPostDto> Create(WorkoutPostDto workout);
 
-        Task<WorkoutExerciseSessionDetailDto> GetExerciseSessions(string currentUserId, int workoutId, int exerciseId);
+        WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId);
+
+        Task ToggleActiveWorkout(string currentUserId, int workoutId);
     }
 }

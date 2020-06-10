@@ -65,7 +65,30 @@ namespace Fitr.Controllers
             if (!await ExerciseIsPartOfProvidedWorkout(exerciseId, workoutId))
                 return NotFound(new { message = $"Unable to fetch exercise sessions for workout with id { workoutId}, the exercise with id {exerciseId} is not a part of the provided workout." });
 
-            return Ok(await _workoutRepository.GetExerciseSessions(CurrentUserId, workoutId, exerciseId));
+            return Ok(_workoutRepository.GetExerciseSessions(CurrentUserId, workoutId, exerciseId));
+        }
+
+        /// <summary>
+        /// Toggles the currently active workout
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PATCH /workout/1
+        ///
+        /// </remarks>
+        /// <returns>The updated workout details</returns>
+        /// <response code="200">The updated workout details</response>
+        /// <response code="401">If the user is unauthorized</response>  
+        [HttpPatch("{workoutId}")]
+        public async Task<ActionResult<IEnumerable<WorkoutDto>>> ToggleActiveWorkout(int workoutId)
+        {
+            if (string.IsNullOrEmpty(CurrentUserId))
+                return Unauthorized(new { message = $"Unable to toggle status for workout with id {workoutId}, no user is currently logged in." });
+
+            await _workoutRepository.ToggleActiveWorkout(CurrentUserId, workoutId);
+
+            return Ok();
         }
 
         /// <summary>
