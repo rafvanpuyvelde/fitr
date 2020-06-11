@@ -24,28 +24,6 @@ class ExerciseDetailPage extends StatefulWidget {
 class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  Future<WorkoutExerciseSessionDetail> fetchExerciseSessionDetail() async {
-    var url = globals.baseApiUrl;
-
-    final response = await http.get(
-        '$url/api/workouts/${widget.workoutId}/exercises/${widget.exercise.id}/sessions',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${widget.user.token}'
-        });
-
-    if (response.statusCode == 401) logout();
-
-    WorkoutExerciseSessionDetail workouts =
-        WorkoutExerciseSessionDetail.fromJson(json.decode(response.body));
-
-    return response.statusCode == 200 ? workouts : null;
-  }
-
-  void logout() {
-    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,5 +88,27 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
             ],
           ),
         ));
+  }
+
+  Future<WorkoutExerciseSessionDetail> fetchExerciseSessionDetail() async {
+    var url = globals.baseApiUrl;
+
+    final response = await http.get(
+        '$url/api/workouts/${widget.workoutId}/exercises/${widget.exercise.id}/sessions',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.user.token}'
+        });
+
+    if (response.statusCode == 401) logout();
+
+    WorkoutExerciseSessionDetail workouts =
+        WorkoutExerciseSessionDetail.fromJson(json.decode(response.body));
+
+    return response.statusCode == 200 ? workouts : null;
+  }
+
+  void logout() {
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
   }
 }

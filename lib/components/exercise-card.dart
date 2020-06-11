@@ -3,7 +3,6 @@ import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout_detail_exercise.dart';
 import 'package:fitr/pages/exercise_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fitr/globals.dart' as globals;
 
 class ExerciseCard extends StatefulWidget {
   final ExerciseDetail exercise;
