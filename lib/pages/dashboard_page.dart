@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/pages/settings_page.dart';
 import 'package:fitr/pages/statistics_page.dart';
+import 'package:fitr/pages/workout_exercise_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
 
@@ -133,6 +134,9 @@ class _DashboardPageState extends State<DashboardPage> {
     switch (controlPageName) {
       case 'Start workout':
         log('Workout started');
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                WorkoutExercisePage(widget.user)));
         break;
       case 'Statistics':
         Navigator.of(context).push(MaterialPageRoute(
@@ -148,6 +152,9 @@ class _DashboardPageState extends State<DashboardPage> {
         break;
       default:
         log('Workout started');
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                WorkoutExercisePage(widget.user)));
         break;
     }
   }

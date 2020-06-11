@@ -30,7 +30,6 @@ class _SettingsPageState extends State<SettingsPage> {
         bottomNavigationBar: BottomAppBar(
             color: globals.secondaryColor, child: Container(height: 60)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: SafeArea(
-            child: Center(child: Text('Settings ${widget.user.name}'))));
+        body: SafeArea(child: Center(child: Text('Settings WIP'))));
   }
 }
