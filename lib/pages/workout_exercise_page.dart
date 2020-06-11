@@ -25,6 +25,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               getExerciseHeader(),
+              SizedBox(height: 32),
               getExerciseSets(),
               getCurrentExerciseSet()
             ],
@@ -36,7 +37,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
 
   Widget getExerciseHeader() {
     return Padding(
-      padding: const EdgeInsets.only(top: 56),
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -62,10 +63,66 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
   }
 
   Widget getExerciseSets() {
+    var setIndex = 0;
+    var reps = '4';
+    var weight = '100';
+
     return Expanded(
       flex: 1,
       child: ListView(
-        children: <Widget>[],
+        children: <Widget>[
+          Container(
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: globals.secondaryColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 31, right: 31),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Set #${setIndex + 1}',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        decoration: TextDecoration.none,
+                        color: globals.primaryTextColor,
+                        letterSpacing: 0.05,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Text('$reps x $weight',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                decoration: TextDecoration.none,
+                                color: globals.secondaryTextColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.05)),
+                      ),
+                      Text('$reps x $weight',
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              decoration: TextDecoration.none,
+                              color: globals.primaryTextColor,
+                              letterSpacing: 0.05,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900))
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -121,7 +178,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             decoration: TextDecoration.none));
   }
 
-  getDecreaseButton() {
+  ClipOval getDecreaseButton() {
     return ClipOval(
       child: Material(
         color: globals.secondaryColor,
@@ -137,7 +194,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     );
   }
 
-  getIncreaseButton() {
+  ClipOval getIncreaseButton() {
     return ClipOval(
       child: Material(
         color: globals.secondaryColor,
