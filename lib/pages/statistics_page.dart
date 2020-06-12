@@ -18,7 +18,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(25.0),
         child: Scaffold(
             backgroundColor: globals.primaryColor,
             key: _drawerKey,

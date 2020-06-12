@@ -13,8 +13,10 @@ class ExerciseDetailPage extends StatefulWidget {
   final ExerciseDetail exercise;
   final User user;
   final int workoutId;
+  final String workoutName;
 
-  ExerciseDetailPage(this.exercise, this.user, this.workoutId, {Key key})
+  ExerciseDetailPage(this.exercise, this.user, this.workoutId, this.workoutName,
+      {Key key})
       : super(key: key);
 
   @override
@@ -53,7 +55,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(top: 57, left: 18),
-                        child: Text('Bench press',
+                        child: Text(widget.exercise.name,
                             style: TextStyle(
                                 color: globals.primaryTextColor,
                                 fontSize: 36,
@@ -63,7 +65,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 18),
-                        child: Text('Full body workout',
+                        child: Text(widget.workoutName,
                             style: TextStyle(
                               color: globals.secondaryTextColor,
                               fontSize: 17,

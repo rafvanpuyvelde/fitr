@@ -195,7 +195,10 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
         _workoutDetail.exercises.length > 0) {
       for (var exercise in _workoutDetail.exercises) {
         exercises.add(new ExerciseCard(
-            exercise, widget.user, widget.workouts[widget.workoutId].id));
+            exercise,
+            widget.user,
+            widget.workouts[widget.workoutId].id,
+            widget.workouts[widget.workoutId].name));
       }
     }
 

@@ -8,8 +8,10 @@ class ExerciseCard extends StatefulWidget {
   final ExerciseDetail exercise;
   final User user;
   final int workoutId;
+  final String workoutName;
 
-  ExerciseCard(this.exercise, this.user, this.workoutId, {Key key})
+  ExerciseCard(this.exercise, this.user, this.workoutId, this.workoutName,
+      {Key key})
       : super(key: key);
 
   @override
@@ -39,8 +41,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) =>
-                ExerciseDetailPage(exercise, widget.user, widget.workoutId)));
+            builder: (BuildContext context) => ExerciseDetailPage(
+                exercise, widget.user, widget.workoutId, widget.workoutName)));
   }
 
   @override
