@@ -70,7 +70,8 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
                           getExerciseHeader(
                               snapshot.data as WorkoutExerciseSessionDetail),
                           SizedBox(height: 32),
-                          getExerciseSets(),
+                          getExerciseSets(
+                              snapshot.data as WorkoutExerciseSessionDetail),
                           getCurrentExerciseSet(
                               snapshot.data as WorkoutExerciseSessionDetail),
                           getNextButton(
@@ -119,18 +120,43 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     );
   }
 
-  Widget getExerciseSets() {
+  Widget getExerciseSets(
+      WorkoutExerciseSessionDetail workoutExerciseSessionDetail) {
+    var sets = new List<Widget>();
+
+    var lastSession = workoutExerciseSessionDetail.sessions.last;
+
+    for (var setIndex = 0; setIndex < lastSession.reps.length; setIndex++) {
+      sets.add(Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: globals.secondaryColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 31, right: 31),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                getSetIndex(setIndex),
+                getPerformancesRow(setIndex, lastSession.reps[setIndex],
+                    lastSession.weight[setIndex])
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+
     return Expanded(
         flex: 1,
-        child: FutureBuilder(
-            future: _futureExerciseDetail,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              } else {
-                return Container(child: getListOfSets(snapshot));
-              }
-            }));
+        child: Container(
+            child: ListView(
+          children: sets,
+        )));
   }
 
   Future<int> fetchCurrentWorkoutId() async {
@@ -323,41 +349,6 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             letterSpacing: 0.05,
             color: globals.primaryTextColor,
             decoration: TextDecoration.none));
-  }
-
-  ListView getListOfSets(AsyncSnapshot snapshot) {
-    var sets = new List<Widget>();
-
-    var lastSession = snapshot.data.sessions.last as WorkoutExerciseSession;
-
-    for (var setIndex = 0; setIndex < lastSession.reps.length; setIndex++) {
-      sets.add(Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Container(
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: globals.secondaryColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 31, right: 31),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                getSetIndex(setIndex),
-                getPerformancesRow(setIndex, lastSession.reps[setIndex],
-                    lastSession.weight[setIndex])
-              ],
-            ),
-          ),
-        ),
-      ));
-    }
-
-    return ListView(
-      children: sets,
-    );
   }
 
   Text getSetIndex(int setIndex) {
