@@ -75,7 +75,8 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
                               getExerciseSets(),
                               getCurrentExerciseSet(snapshot.data
                                   as WorkoutExerciseSessionDetail),
-                              getNextButton()
+                              getNextButton(
+                                  snapshot.data as WorkoutExerciseSessionDetail)
                             ],
                           ));
                     }
@@ -203,7 +204,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           getCurrentSetCount(),
           SizedBox(height: 36),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               getDecreaseButton(SetVariable.reps),
               getCurrentExerciseSetReps(exerciseSessionDetail),
@@ -222,7 +223,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
                     decoration: TextDecoration.none)),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               getDecreaseButton(SetVariable.weight),
               getCurrentExerciseSetWeight(exerciseSessionDetail),
@@ -403,7 +404,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     );
   }
 
-  Padding getNextButton() {
+  Padding getNextButton(WorkoutExerciseSessionDetail exerciseSessionDetail) {
     return Padding(
       padding: const EdgeInsets.only(top: 15, bottom: 20),
       child: Center(
@@ -414,27 +415,32 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             ),
             elevation: 8,
             textColor: globals.primaryTextColor,
-            onPressed: () => updateSetCounter(),
+            onPressed: () => updateSetCounter(exerciseSessionDetail),
             child: Text('Next')),
       ),
     );
   }
 
-  void updateSetCounter() {
-    _futureExerciseDetail.then((exerciseDetail) => {
-          if (_currentSetIndex + 1 > exerciseDetail.sessions.last.reps.length)
-            {
-              if (_currentExerciseIndex + 1 <=
-                  _currentWorkout.exercises.length - 1)
-                {
-                  _currentExerciseIndex++,
-                  _currentSetPerformanceIsAltered = false
-                }
-              else
-                {log('Workout done')}
-            }
-          else
-            {_currentSetIndex++, _currentSetPerformanceIsAltered = false}
+  void updateSetCounter(WorkoutExerciseSessionDetail exerciseSessionDetail) {
+    var nextSetIsntLastSet =
+        _currentSetIndex + 1 > exerciseSessionDetail.sessions.last.reps.length;
+    var nextExerciseIsntLastExercise =
+        _currentExerciseIndex + 1 <= _currentWorkout.exercises.length - 1;
+
+    if (nextSetIsntLastSet) {
+      if (nextExerciseIsntLastExercise) {
+        setState(() {
+          _currentExerciseIndex++;
+          _currentSetPerformanceIsAltered = false;
         });
+      } else {
+        log('Workout done');
+      }
+    } else {
+      setState(() {
+        _currentSetIndex++;
+        _currentSetPerformanceIsAltered = false;
+      });
+    }
   }
 }
