@@ -55,32 +55,30 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
       child: Container(
           width: MediaQuery.of(context).size.width,
           color: globals.primaryColor,
-          child: Expanded(
-              flex: 1,
-              child: FutureBuilder(
-                  future: _futureExerciseDetail,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      return Padding(
-                          padding: const EdgeInsets.only(left: 18, right: 18),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              getExerciseHeader(snapshot.data
-                                  as WorkoutExerciseSessionDetail),
-                              SizedBox(height: 32),
-                              getExerciseSets(),
-                              getCurrentExerciseSet(snapshot.data
-                                  as WorkoutExerciseSessionDetail),
-                              getNextButton(
-                                  snapshot.data as WorkoutExerciseSessionDetail)
-                            ],
-                          ));
-                    }
-                  }))),
+          child: FutureBuilder(
+              future: _futureExerciseDetail,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return Padding(
+                      padding: const EdgeInsets.only(left: 18, right: 18),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          getExerciseHeader(
+                              snapshot.data as WorkoutExerciseSessionDetail),
+                          SizedBox(height: 32),
+                          getExerciseSets(),
+                          getCurrentExerciseSet(
+                              snapshot.data as WorkoutExerciseSessionDetail),
+                          getNextButton(
+                              snapshot.data as WorkoutExerciseSessionDetail)
+                        ],
+                      ));
+                }
+              })),
     );
   }
 
