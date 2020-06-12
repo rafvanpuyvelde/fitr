@@ -2,7 +2,7 @@ library fitr.globals;
 
 import 'package:flutter/painting.dart';
 
-String baseApiUrl = 'http://e172e2ca652f.ngrok.io';
+String baseApiUrl = 'http://7c70214de833.ngrok.io';
 
 Color primaryColor = Color.fromARGB(255, 231, 238, 252);
 Color secondaryColor = Color.fromARGB(255, 245, 248, 255);

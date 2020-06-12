@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
+enum SetVariable { reps, weight }
+
 class WorkoutExercisePage extends StatefulWidget {
   final User user;
 
@@ -24,6 +26,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
 
   var _currentRepCount = 0;
   var _currentWeight = 0.0;
+  var _currentSetPerformanceIsAltered = false;
 
   Workout _currentWorkout;
   Future<WorkoutExerciseSessionDetail> _futureExerciseDetail;
@@ -50,23 +53,33 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        color: globals.primaryColor,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 18, right: 18),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              getExerciseHeader(),
-              SizedBox(height: 32),
-              getExerciseSets(),
-              getCurrentExerciseSet(),
-              getNextButton()
-            ],
-          ),
-        ),
-      ),
+          width: MediaQuery.of(context).size.width,
+          color: globals.primaryColor,
+          child: Expanded(
+              flex: 1,
+              child: FutureBuilder(
+                  future: _futureExerciseDetail,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      return Padding(
+                          padding: const EdgeInsets.only(left: 18, right: 18),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              getExerciseHeader(snapshot.data
+                                  as WorkoutExerciseSessionDetail),
+                              SizedBox(height: 32),
+                              getExerciseSets(),
+                              getCurrentExerciseSet(snapshot.data
+                                  as WorkoutExerciseSessionDetail),
+                              getNextButton()
+                            ],
+                          ));
+                    }
+                  }))),
     );
   }
 
@@ -80,13 +93,13 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     );
   }
 
-  Widget getExerciseHeader() {
+  Widget getExerciseHeader(WorkoutExerciseSessionDetail exerciseSessionDetail) {
     return Padding(
       padding: const EdgeInsets.only(top: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Bench press',
+          Text(exerciseSessionDetail.exerciseName,
               style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w900,
@@ -94,7 +107,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
                   letterSpacing: 0.05,
                   color: globals.primaryTextColor,
                   decoration: TextDecoration.none)),
-          Text('Full body workout',
+          Text(exerciseSessionDetail.workoutName,
               style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w400,
@@ -180,7 +193,8 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
   }
 
-  Widget getCurrentExerciseSet() {
+  Widget getCurrentExerciseSet(
+      WorkoutExerciseSessionDetail exerciseSessionDetail) {
     return Padding(
       padding: const EdgeInsets.only(top: 46, bottom: 15),
       child: Column(
@@ -191,9 +205,9 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              getDecreaseButton(),
-              getCurrentExerciseSetReps(),
-              getIncreaseButton()
+              getDecreaseButton(SetVariable.reps),
+              getCurrentExerciseSetReps(exerciseSessionDetail),
+              getIncreaseButton(SetVariable.reps)
             ],
           ),
           Padding(
@@ -210,9 +224,9 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              getDecreaseButton(),
-              getCurrentExerciseSetWeight(),
-              getIncreaseButton()
+              getDecreaseButton(SetVariable.weight),
+              getCurrentExerciseSetWeight(exerciseSessionDetail),
+              getIncreaseButton(SetVariable.weight)
             ],
           )
         ],
@@ -231,29 +245,43 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             decoration: TextDecoration.none));
   }
 
-  ClipOval getDecreaseButton() {
+  ClipOval getDecreaseButton(SetVariable setVariable) {
     return ClipOval(
       child: Material(
         color: globals.secondaryColor,
         child: InkWell(
           splashColor: globals.errorColor,
+          onTap: () {
+            setState(() {
+              _currentSetPerformanceIsAltered = true;
+              setVariable == SetVariable.reps
+                  ? _currentRepCount--
+                  : _currentWeight = _currentWeight - 5;
+            });
+          },
           child: SizedBox(
               width: 56,
               height: 56,
               child: Icon(Icons.arrow_downward, color: globals.errorColor)),
-          onTap: () {},
         ),
       ),
     );
   }
 
-  ClipOval getIncreaseButton() {
+  ClipOval getIncreaseButton(SetVariable setVariable) {
     return ClipOval(
       child: Material(
         color: globals.secondaryColor,
         child: InkWell(
           splashColor: globals.successColor,
-          onTap: () {},
+          onTap: () {
+            setState(() {
+              _currentSetPerformanceIsAltered = true;
+              setVariable == SetVariable.reps
+                  ? _currentRepCount++
+                  : _currentWeight = _currentWeight + 5;
+            });
+          },
           child: SizedBox(
               width: 56,
               height: 56,
@@ -266,8 +294,13 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     );
   }
 
-  Text getCurrentExerciseSetReps() {
-    return Text('6',
+  Text getCurrentExerciseSetReps(
+      WorkoutExerciseSessionDetail exerciseSessionDetail) {
+    if (!_currentSetPerformanceIsAltered)
+      _currentRepCount =
+          exerciseSessionDetail.sessions.last.reps[_currentSetIndex];
+
+    return Text(_currentRepCount.toString(),
         style: TextStyle(
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
@@ -277,8 +310,13 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             decoration: TextDecoration.none));
   }
 
-  Text getCurrentExerciseSetWeight() {
-    return Text('80',
+  Text getCurrentExerciseSetWeight(
+      WorkoutExerciseSessionDetail exerciseSessionDetail) {
+    if (!_currentSetPerformanceIsAltered)
+      _currentWeight =
+          exerciseSessionDetail.sessions.last.weight[_currentSetIndex];
+
+    return Text(_currentWeight.toString(),
         style: TextStyle(
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
@@ -388,12 +426,15 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             {
               if (_currentExerciseIndex + 1 <=
                   _currentWorkout.exercises.length - 1)
-                {_currentExerciseIndex++}
+                {
+                  _currentExerciseIndex++,
+                  _currentSetPerformanceIsAltered = false
+                }
               else
                 {log('Workout done')}
             }
           else
-            {_currentSetIndex++}
+            {_currentSetIndex++, _currentSetPerformanceIsAltered = false}
         });
   }
 }
