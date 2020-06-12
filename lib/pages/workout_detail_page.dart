@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:fitr/components/exercise-card.dart';
 import 'package:fitr/components/side-menu.dart';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
 import 'package:fitr/models/workout_detail.dart';
+import 'package:fitr/pages/workout_exercise_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -144,7 +146,10 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                     child: InkWell(
                       splashColor: Colors.blue.withAlpha(30),
                       onTap: () {
-                        print('Card tapped.');
+                        log('Workout started');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                WorkoutExercisePage(widget.user)));
                       },
                       child: Container(
                         width: 360,
