@@ -234,7 +234,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
   }
 
   Text getCurrentSetCount() {
-    return Text('Set #1',
+    return Text('Set #${_currentSetIndex + 1}',
         style: TextStyle(
             fontFamily: 'Roboto',
             fontWeight: FontWeight.w300,
@@ -255,7 +255,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
               _currentSetPerformanceIsAltered = true;
               setVariable == SetVariable.reps
                   ? _currentRepCount--
-                  : _currentWeight = _currentWeight - 5;
+                  : _currentWeight = _currentWeight - 0.5;
             });
           },
           child: SizedBox(
@@ -278,7 +278,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
               _currentSetPerformanceIsAltered = true;
               setVariable == SetVariable.reps
                   ? _currentRepCount++
-                  : _currentWeight = _currentWeight + 5;
+                  : _currentWeight = _currentWeight + 0.5;
             });
           },
           child: SizedBox(
@@ -413,20 +413,20 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             ),
             elevation: 8,
             textColor: globals.primaryTextColor,
-            onPressed: () => updateSetCounter(exerciseSessionDetail),
+            onPressed: () => {updateSetCounter(exerciseSessionDetail)},
             child: Text('Next')),
       ),
     );
   }
 
   void updateSetCounter(WorkoutExerciseSessionDetail exerciseSessionDetail) {
-    var nextSetIsntLastSet =
-        _currentSetIndex + 1 > exerciseSessionDetail.sessions.last.reps.length;
-    var nextExerciseIsntLastExercise =
-        _currentExerciseIndex + 1 <= _currentWorkout.exercises.length - 1;
+    var nextSetIsLastSet = _currentSetIndex + 1 ==
+        exerciseSessionDetail.sessions.last.reps.length - 1;
+    var nextExerciseIsLastExercise =
+        _currentExerciseIndex + 1 == _currentWorkout.exercises.length - 1;
 
-    if (nextSetIsntLastSet) {
-      if (nextExerciseIsntLastExercise) {
+    if (nextSetIsLastSet) {
+      if (!nextExerciseIsLastExercise) {
         setState(() {
           _currentExerciseIndex++;
           _currentSetPerformanceIsAltered = false;
@@ -436,6 +436,8 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
       }
     } else {
       setState(() {
+        _newExerciseSession.reps[_currentSetIndex] = _currentRepCount;
+        _newExerciseSession.weight[_currentSetIndex] = _currentWeight;
         _currentSetIndex++;
         _currentSetPerformanceIsAltered = false;
       });
