@@ -49,31 +49,24 @@ namespace Fitr.Repositories.Workout
             if (sessionDetail == null) { throw new ArgumentNullException(nameof(sessionDetail)); }
 
             // Add the sessionDetail to the db
-            var sessionResult = _context.Sessions.Add(new Session { Date = sessionDetail.Date, WorkoutId = sessionDetail.WorkoutId });
+            var newlyCreatedSession = _context.Sessions.Add(new Session { Date = sessionDetail.Date, WorkoutId = sessionDetail.WorkoutId });
 
             await _context.SaveChangesAsync();
 
             // Edit the sessionDetail id
-            sessionDetail.Id = sessionResult.Entity.Id;
+            sessionDetail.SessionId = newlyCreatedSession.Entity.Id;
 
             // Add sessionDetail sets
-            AddSessionDetailSetsToDb(sessionDetail);
-
-            return sessionDetail;
-        }
-
-        private async void AddSessionDetailSetsToDb(WorkoutSessionDetailDto sessionDetail)
-        {
-            foreach (var session in sessionDetail.Sessions)
+            foreach (var exercise in sessionDetail.Exercises)
             {
-                for (var setIndex = 0; setIndex < session.Reps.Length; setIndex++)
+                for (var setIndex = 0; setIndex < exercise.Reps.Length; setIndex++)
                 {
                     _context.Sets.Add(new Set
                     {
-                        ExerciseId = session.ExerciseId,
-                        SessionId = session.Id,
-                        Reps = session.Reps[setIndex],
-                        Weight = session.Weight[setIndex],
+                        ExerciseId = exercise.ExerciseId,
+                        SessionId = sessionDetail.SessionId,
+                        Reps = exercise.Reps[setIndex],
+                        Weight = exercise.Weight[setIndex],
                         Unit = Enums.Unit.Kg,
                         UsesBands = false,
                         UsesChains = false
@@ -82,6 +75,8 @@ namespace Fitr.Repositories.Workout
             }
 
             await _context.SaveChangesAsync();
+
+            return sessionDetail;
         }
 
         public WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)

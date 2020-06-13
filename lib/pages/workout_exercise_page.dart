@@ -481,8 +481,9 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
         .then((response) => {
               if (response.statusCode == 200)
                 {
-                  // Go back to dashboard
+                  // Go back to dashboard & reset state
                   log('Workout added successfully ...'),
+                  resetSessionState(),
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => DashboardPage(user: widget.user)))
                 }
@@ -511,15 +512,28 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     return response;
   }
 
+  void resetSessionState() {
+    _workoutId = 0;
+    _currentWeight = 0.0;
+    _currentSetIndex = 0;
+    _currentRepCount = 0;
+    _currentExerciseIndex = 0;
+    _triedToCreateWorkout = false;
+    _currentSetPerformanceIsAltered = false;
+
+    _currentWorkout = null;
+    _futureExerciseDetail = null;
+    _newSession = null;
+    _newExerciseSession = null;
+  }
+
   String getNewWorkoutRequestBody() {
     return json.encode({
       'workoutId': _currentWorkout.id,
       'date': _newSession.first.date.toIso8601String(),
-      'sessions': _newSession
+      'exercises': _newSession
           .map((exercise) => {
                 'exerciseId': exercise.id,
-                'date': exercise.date.toIso8601String(),
-                'sets': exercise.sets,
                 'reps': exercise.reps,
                 'weight': exercise.weight
               })
