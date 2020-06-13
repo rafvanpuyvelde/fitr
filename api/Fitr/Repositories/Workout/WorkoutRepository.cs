@@ -44,9 +44,37 @@ namespace Fitr.Repositories.Workout
                 .ConfigureAwait(false);
         }
 
-        public Task<WorkoutPostDto> Create(WorkoutPostDto workout)
+        public async Task<WorkoutSessionDetailDto> CreateSession(string currentUserId, int workoutId, WorkoutSessionDetailDto sessionDetail)
         {
-            throw new System.NotImplementedException();
+            if (sessionDetail == null) { throw new ArgumentNullException(nameof(sessionDetail)); }
+
+            // Add the sessionDetail to the db
+            var sessionResult = _context.Sessions.Add(new Session { Date = sessionDetail.Date, WorkoutId = sessionDetail.WorkoutId });
+
+            // Edit the sessionDetail id
+            sessionDetail.Id = sessionResult.Entity.Id;
+
+            // Add sessionDetail sets
+            foreach (var session in sessionDetail.Sessions)
+            {
+                for (var setIndex = 0; setIndex < session.Reps.Length; setIndex++)
+                {
+                    _context.Sets.Add(new Set
+                    {
+                        ExerciseId = session.ExerciseId,
+                        Reps = session.Reps[setIndex],
+                        SessionId = sessionDetail.Id,
+                        Weight = session.Weight[setIndex],
+                        Unit = Enums.Unit.Kg,
+                        UsesBands = false,
+                        UsesChains = false
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return sessionDetail;
         }
 
         public WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)

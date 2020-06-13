@@ -10,7 +10,7 @@ namespace Fitr.Repositories.Workout
         
         Task<IEnumerable<WorkoutDto>> GetAll(string currentUserId);
         
-        Task<WorkoutPostDto> Create(WorkoutPostDto workout);
+        Task<WorkoutSessionDetailDto> CreateSession(string currentUserId, int workoutId, WorkoutSessionDetailDto sessionDetail);
 
         WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId);
 

@@ -4,6 +4,7 @@ import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout.dart';
 import 'package:fitr/models/workout_exercise_session.dart';
 import 'package:fitr/models/workout_exercise_session_detail.dart';
+import 'package:fitr/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitr/globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ var _currentWeight = 0.0;
 var _currentSetIndex = 0;
 var _currentRepCount = 0;
 var _currentExerciseIndex = 0;
+var _triedToCreateWorkout = false;
 var _currentSetPerformanceIsAltered = false;
 
 class WorkoutExercisePage extends StatefulWidget {
@@ -99,6 +101,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
     setState(() {
       _newExerciseSession = new WorkoutExerciseSession(
           date: DateTime.now().toUtc(),
+          id: _currentWorkout.exercises[_currentExerciseIndex].id,
           sets: exerciseDetail.sessions.last.sets,
           reps: new List<int>(),
           weight: new List<double>());
@@ -449,10 +452,7 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           setExerciseState();
         });
       } else {
-        setState(() {
-          _newSession.add(_newExerciseSession);
-        });
-        log('Workout done');
+        finishWorkout();
       }
     } else {
       setState(() {
@@ -462,5 +462,68 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
         _currentSetPerformanceIsAltered = false;
       });
     }
+  }
+
+  void finishWorkout() {
+    log('Workout done');
+
+    // Add exercise session to the session list
+    if (!_triedToCreateWorkout) {
+      setState(() {
+        _newSession.add(_newExerciseSession);
+      });
+    }
+
+    // Get the request body for the create request
+    var sessionRequestBody = getNewWorkoutRequestBody();
+
+    createNewWorkoutSession(sessionRequestBody)
+        .then((response) => {
+              if (response.statusCode == 200)
+                {
+                  // Go back to dashboard
+                  log('Workout added successfully ...'),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => DashboardPage(user: widget.user)))
+                }
+              else
+                {
+                  // Something went wrong
+                  log('Problem while adding workout ...'),
+                  setState(() => {_triedToCreateWorkout = true})
+                }
+            })
+        .catchError((onError) => log(onError));
+  }
+
+  Future<http.Response> createNewWorkoutSession(String requestBody) async {
+    var url = globals.baseApiUrl;
+
+    final response = await http.post('$url/api/workouts/$_workoutId/sessions',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.user.token}'
+        },
+        body: requestBody);
+
+    if (response.statusCode == 401) logout();
+
+    return response;
+  }
+
+  String getNewWorkoutRequestBody() {
+    return json.encode({
+      'workoutId': _currentWorkout.id,
+      'date': _newSession.first.date.toIso8601String(),
+      'sessions': _newSession
+          .map((exercise) => {
+                'exerciseId': exercise.id,
+                'date': exercise.date.toIso8601String(),
+                'sets': exercise.sets,
+                'reps': exercise.reps,
+                'weight': exercise.weight
+              })
+          .toList()
+    });
   }
 }

@@ -36,7 +36,7 @@ namespace Fitr.Controllers
         /// <response code="200">Returns the workout</response>
         /// <response code="401">If the user is unauthorized</response>  
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<WorkoutDto>>> Get(int id)
+        public async Task<ActionResult<WorkoutDetailDto>> Get(int id)
         {
             if (string.IsNullOrEmpty(CurrentUserId))
                 return Unauthorized(new { message = $"Unable to fetch workout with id {id}, no user is currently logged in." });
@@ -57,7 +57,7 @@ namespace Fitr.Controllers
         /// <response code="200">Returns the workout exercise sessions</response>
         /// <response code="401">If the user is unauthorized</response>  
         [HttpGet("{workoutId}/exercises/{exerciseId}/sessions")]
-        public async Task<ActionResult<IEnumerable<WorkoutDto>>> GetSessions(int workoutId, int exerciseId)
+        public async Task<ActionResult<WorkoutExerciseSessionDetailDto>> GetSessions(int workoutId, int exerciseId)
         {
             if (string.IsNullOrEmpty(CurrentUserId))
                 return Unauthorized(new { message = $"Unable to fetch exercise sessions for workout with id {workoutId}, no user is currently logged in." });
@@ -81,7 +81,7 @@ namespace Fitr.Controllers
         /// <response code="200">The updated workout details</response>
         /// <response code="401">If the user is unauthorized</response>  
         [HttpPatch("{workoutId}")]
-        public async Task<ActionResult<IEnumerable<WorkoutDto>>> ToggleActiveWorkout(int workoutId)
+        public async Task<ActionResult> ToggleActiveWorkout(int workoutId)
         {
             if (string.IsNullOrEmpty(CurrentUserId))
                 return Unauthorized(new { message = $"Unable to toggle status for workout with id {workoutId}, no user is currently logged in." });
@@ -110,6 +110,30 @@ namespace Fitr.Controllers
                 return Unauthorized(new { message = "Unable to fetch workouts, no user is currently logged in." });
 
             return Ok(await _workoutRepository.GetAll(CurrentUserId));
+        }
+
+        /// <summary>
+        /// Adds a session to a workout
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /workouts/1/sessions
+        ///
+        /// </remarks>
+        /// <returns>The workout session details</returns>
+        /// <response code="200">Returns the workout session details</response>
+        /// <response code="401">If the user is unauthorized</response>  
+        [HttpPost("{workoutId}/sessions")]
+        public async Task<ActionResult<WorkoutSessionDetailDto>> AddSession(int workoutId, WorkoutSessionDetailDto workoutSessionDetailDto)
+        {
+            if (string.IsNullOrEmpty(CurrentUserId))
+                return Unauthorized(new { message = $"Unable to create session for workout with id {workoutId}, no user is currently logged in." });
+
+            if (workoutSessionDetailDto == null)
+                return BadRequest(new { message = $"Unable to create session for workout with id {workoutId}, session details are null."});
+
+            return Ok(await _workoutRepository.CreateSession(CurrentUserId, workoutId, workoutSessionDetailDto));
         }
 
         private async Task<bool> ExerciseIsPartOfProvidedWorkout(int exerciseId, int workoutId)
