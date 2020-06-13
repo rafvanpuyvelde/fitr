@@ -56,7 +56,8 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           _currentWorkout.exercises[_currentExerciseIndex].id);
       _futureExerciseDetail
           .then((exerciseDetail) => {setupNewExerciseSession(exerciseDetail)});
-      _newSession.add(_newExerciseSession);
+
+      if (_newExerciseSession != null) _newSession.add(_newExerciseSession);
     });
   }
 
@@ -448,6 +449,9 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
           setExerciseState();
         });
       } else {
+        setState(() {
+          _newSession.add(_newExerciseSession);
+        });
         log('Workout done');
       }
     } else {

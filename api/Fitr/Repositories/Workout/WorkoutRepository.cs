@@ -61,7 +61,7 @@ namespace Fitr.Repositories.Workout
             var result = new WorkoutExerciseSessionDetailDto
             {
                 ExerciseId = exerciseId,
-                ExerciseName = sessions.First().Sets.First().Exercise.Name,
+                ExerciseName = _context.Exercises.SingleAsync(exercise => exercise.Id == exerciseId).Result.Name,
                 WorkoutId = workoutId,
                 WorkoutName = sessions.First().Workout.Name,
                 Sessions = new List<WorkoutExerciseSession>()
