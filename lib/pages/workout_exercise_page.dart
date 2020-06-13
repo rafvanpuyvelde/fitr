@@ -10,6 +10,13 @@ import 'package:http/http.dart' as http;
 
 enum SetVariable { reps, weight }
 
+var _workoutId = 0;
+var _currentWeight = 0.0;
+var _currentSetIndex = 0;
+var _currentRepCount = 0;
+var _currentExerciseIndex = 0;
+var _currentSetPerformanceIsAltered = false;
+
 class WorkoutExercisePage extends StatefulWidget {
   final User user;
 
@@ -20,33 +27,37 @@ class WorkoutExercisePage extends StatefulWidget {
 }
 
 class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
-  var _workoutId = 0;
-  var _currentSetIndex = 0;
-  var _currentExerciseIndex = 0;
-
-  var _currentRepCount = 0;
-  var _currentWeight = 0.0;
-  var _currentSetPerformanceIsAltered = false;
-
   Workout _currentWorkout;
   Future<WorkoutExerciseSessionDetail> _futureExerciseDetail;
 
+  List<WorkoutExerciseSession> _newSession;
   WorkoutExerciseSession _newExerciseSession;
 
   @override
   void initState() {
     super.initState();
 
+    setState(() {
+      _newSession = new List<WorkoutExerciseSession>();
+    });
+
     fetchCurrentWorkoutId().then((workoutId) => {
           setState(() => {_workoutId = workoutId}),
           fetchCurrentWorkout().then((currentWorkout) => {
                 setState(() => {_currentWorkout = currentWorkout}),
-                _futureExerciseDetail = fetchExerciseSessionDetail(
-                    _currentWorkout.exercises[_currentExerciseIndex].id),
-                _futureExerciseDetail.then((exerciseDetail) =>
-                    {setupNewExerciseSession(exerciseDetail)})
+                setExerciseState()
               })
         });
+  }
+
+  setExerciseState() {
+    setState(() {
+      _futureExerciseDetail = fetchExerciseSessionDetail(
+          _currentWorkout.exercises[_currentExerciseIndex].id);
+      _futureExerciseDetail
+          .then((exerciseDetail) => {setupNewExerciseSession(exerciseDetail)});
+      _newSession.add(_newExerciseSession);
+    });
   }
 
   @override
@@ -84,13 +95,21 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
   }
 
   void setupNewExerciseSession(WorkoutExerciseSessionDetail exerciseDetail) {
-    _newExerciseSession = new WorkoutExerciseSession(
-      id: null,
-      date: DateTime.now().toUtc(),
-      sets: exerciseDetail.sessions.last.sets,
-      reps: exerciseDetail.sessions.last.reps,
-      weight: exerciseDetail.sessions.last.weight,
-    );
+    setState(() {
+      _newExerciseSession = new WorkoutExerciseSession(
+          date: DateTime.now().toUtc(),
+          sets: exerciseDetail.sessions.last.sets,
+          reps: new List<int>(),
+          weight: new List<double>());
+
+      exerciseDetail.sessions.last.reps.forEach((element) {
+        _newExerciseSession.reps.add(element);
+      });
+
+      exerciseDetail.sessions.last.weight.forEach((element) {
+        _newExerciseSession.weight.add(element);
+      });
+    });
   }
 
   Widget getExerciseHeader(WorkoutExerciseSessionDetail exerciseSessionDetail) {
@@ -124,9 +143,9 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
       WorkoutExerciseSessionDetail workoutExerciseSessionDetail) {
     var sets = new List<Widget>();
 
-    var lastSession = workoutExerciseSessionDetail.sessions.last;
-
-    for (var setIndex = 0; setIndex < lastSession.reps.length; setIndex++) {
+    for (var setIndex = 0;
+        setIndex < workoutExerciseSessionDetail.sessions.last.reps.length;
+        setIndex++) {
       sets.add(Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Container(
@@ -142,8 +161,10 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 getSetIndex(setIndex),
-                getPerformancesRow(setIndex, lastSession.reps[setIndex],
-                    lastSession.weight[setIndex])
+                getPerformancesRow(
+                    setIndex,
+                    workoutExerciseSessionDetail.sessions.last.reps[setIndex],
+                    workoutExerciseSessionDetail.sessions.last.weight[setIndex])
               ],
             ),
           ),
@@ -404,23 +425,27 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
             ),
             elevation: 8,
             textColor: globals.primaryTextColor,
-            onPressed: () => {updateSetCounter(exerciseSessionDetail)},
+            onPressed: () => updateSetCounter(exerciseSessionDetail),
             child: Text('Next')),
       ),
     );
   }
 
-  void updateSetCounter(WorkoutExerciseSessionDetail exerciseSessionDetail) {
-    var nextSetIsLastSet = _currentSetIndex + 1 ==
-        exerciseSessionDetail.sessions.last.reps.length - 1;
-    var nextExerciseIsLastExercise =
-        _currentExerciseIndex + 1 == _currentWorkout.exercises.length - 1;
+  updateSetCounter(WorkoutExerciseSessionDetail exerciseSessionDetail) {
+    var setIsLastSet =
+        _currentSetIndex == exerciseSessionDetail.sessions.last.reps.length - 1;
+    var exerciseIsLastExercise =
+        _currentExerciseIndex == _currentWorkout.exercises.length - 1;
 
-    if (nextSetIsLastSet) {
-      if (!nextExerciseIsLastExercise) {
+    if (setIsLastSet) {
+      if (!exerciseIsLastExercise) {
         setState(() {
+          _newExerciseSession.reps[_currentSetIndex] = _currentRepCount;
+          _newExerciseSession.weight[_currentSetIndex] = _currentWeight;
           _currentExerciseIndex++;
           _currentSetPerformanceIsAltered = false;
+          _currentSetIndex = 0;
+          setExerciseState();
         });
       } else {
         log('Workout done');
