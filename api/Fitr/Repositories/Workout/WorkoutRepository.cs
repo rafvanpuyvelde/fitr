@@ -51,10 +51,19 @@ namespace Fitr.Repositories.Workout
             // Add the sessionDetail to the db
             var sessionResult = _context.Sessions.Add(new Session { Date = sessionDetail.Date, WorkoutId = sessionDetail.WorkoutId });
 
+            await _context.SaveChangesAsync();
+
             // Edit the sessionDetail id
             sessionDetail.Id = sessionResult.Entity.Id;
 
             // Add sessionDetail sets
+            AddSessionDetailSetsToDb(sessionDetail);
+
+            return sessionDetail;
+        }
+
+        private async void AddSessionDetailSetsToDb(WorkoutSessionDetailDto sessionDetail)
+        {
             foreach (var session in sessionDetail.Sessions)
             {
                 for (var setIndex = 0; setIndex < session.Reps.Length; setIndex++)
@@ -62,8 +71,8 @@ namespace Fitr.Repositories.Workout
                     _context.Sets.Add(new Set
                     {
                         ExerciseId = session.ExerciseId,
+                        SessionId = session.Id,
                         Reps = session.Reps[setIndex],
-                        SessionId = sessionDetail.Id,
                         Weight = session.Weight[setIndex],
                         Unit = Enums.Unit.Kg,
                         UsesBands = false,
@@ -73,8 +82,6 @@ namespace Fitr.Repositories.Workout
             }
 
             await _context.SaveChangesAsync();
-
-            return sessionDetail;
         }
 
         public WorkoutExerciseSessionDetailDto GetExerciseSessions(string currentUserId, int workoutId, int exerciseId)
