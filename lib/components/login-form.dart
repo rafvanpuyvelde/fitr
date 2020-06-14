@@ -16,11 +16,81 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  var _formError = '';
 
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<User> _futureUser;
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _vh = MediaQuery.of(context).size.height;
+    double _vw = MediaQuery.of(context).size.width;
+
+    return new Scaffold(
+        body: Form(
+      key: _formKey,
+      child: Container(
+          width: _vw,
+          height: _vh,
+          color: globals.primaryColor,
+          child: Center(
+            child: Container(
+                width: _vw * 0.74,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 35),
+                      child: Text(
+                        'Fitr',
+                        style: TextStyle(
+                            color: globals.primaryTextColor,
+                            fontSize: (_vw * 0.74) / 6,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'Lobster',
+                            letterSpacing: 0.5),
+                      ),
+                    ),
+                    CustomInputField('username', _userNameController, false),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: CustomInputField(
+                          'password', _passwordController, true),
+                    ),
+                    getFormErrors(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25),
+                      child: ButtonTheme(
+                        minWidth: 200,
+                        height: 50,
+                        child: RaisedButton(
+                          color: globals.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 8,
+                          textColor: globals.primaryTextColor,
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) login();
+                          },
+                          child: Text('Login'),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          )),
+    ));
+  }
 
   Future<User> authenticate(String userName, String password) async {
     var url = globals.baseApiUrl;
@@ -40,88 +110,28 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void login() {
-    _futureUser = authenticate(_userNameController.text.replaceAll('\t', ''),
-        _passwordController.text.replaceAll('\t', ''));
+    var userName = _userNameController.text.replaceAll('\t', '');
+    var password = _passwordController.text.replaceAll('\t', '');
 
-    _futureUser.then((User user) => {
-          if (user.token != null)
-            setState(() {
-              Navigator.pushReplacement(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          new DashboardPage(user: user)));
-            })
+    authenticate(userName, password).then((User user) => {
+          if (user == null)
+            setState(() => {_formError = 'Bad username and/or password'}),
+          if (user.token != null) goToDashboard(user)
         });
   }
 
-  @override
-  void dispose() {
-    _userNameController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
+  void goToDashboard(User user) {
+    Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => new DashboardPage(user: user)));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        body: Form(
-      key: _formKey,
-      child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: globals.primaryColor,
-          child: Center(
-            child: Container(
-                width: 400,
-                height: 400,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 35),
-                      child: Text(
-                        'Fitr',
-                        style: TextStyle(
-                            color: globals.primaryTextColor,
-                            fontSize: 50,
-                            fontWeight: FontWeight.normal,
-                            fontStyle: FontStyle.normal,
-                            fontFamily: 'Lobster',
-                            letterSpacing: 0.5),
-                      ),
-                    ),
-                    CustomInputField('username', _userNameController, false),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: CustomInputField(
-                          'password', _passwordController, true),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 35.0),
-                      child: ButtonTheme(
-                        minWidth: 200.0,
-                        height: 50.0,
-                        child: RaisedButton(
-                          color: globals.secondaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 8,
-                          textColor: globals.primaryTextColor,
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              login();
-                            }
-                          },
-                          child: Text('Login'),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-          )),
-    ));
+  Widget getFormErrors() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 3),
+      child: Text(_formError,
+          style: TextStyle(color: globals.errorColor, fontFamily: 'Roboto')),
+    );
   }
 }
