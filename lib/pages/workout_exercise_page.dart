@@ -65,9 +65,12 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
 
   @override
   Widget build(BuildContext context) {
+    double _vw = MediaQuery.of(context).size.width;
+    double _vh = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Container(
-          width: MediaQuery.of(context).size.width,
+          width: _vw,
           color: globals.primaryColor,
           child: FutureBuilder(
               future: _futureExerciseDetail,
@@ -81,15 +84,26 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          getExerciseHeader(
-                              snapshot.data as WorkoutExerciseSessionDetail),
-                          SizedBox(height: 32),
-                          getExerciseSets(
-                              snapshot.data as WorkoutExerciseSessionDetail),
-                          getCurrentExerciseSet(
-                              snapshot.data as WorkoutExerciseSessionDetail),
-                          getNextButton(
-                              snapshot.data as WorkoutExerciseSessionDetail)
+                          Expanded(
+                            flex: 15,
+                            child: getExerciseHeader(
+                                snapshot.data as WorkoutExerciseSessionDetail),
+                          ),
+                          Expanded(
+                            flex: 25,
+                            child: getExerciseSets(
+                                snapshot.data as WorkoutExerciseSessionDetail),
+                          ),
+                          Expanded(
+                            flex: 45,
+                            child: getCurrentExerciseSet(
+                                snapshot.data as WorkoutExerciseSessionDetail),
+                          ),
+                          Expanded(
+                            flex: 15,
+                            child: getNextButton(
+                                snapshot.data as WorkoutExerciseSessionDetail),
+                          )
                         ],
                       ));
                 }
@@ -118,11 +132,14 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
 
   Widget getExerciseHeader(WorkoutExerciseSessionDetail exerciseSessionDetail) {
     return Padding(
-      padding: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.only(top: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(exerciseSessionDetail.exerciseName,
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
               style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w900,
@@ -176,12 +193,13 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
       ));
     }
 
-    return Expanded(
-        flex: 1,
-        child: Container(
-            child: ListView(
-          children: sets,
-        )));
+    return Padding(
+      padding: const EdgeInsets.only(top: 13, bottom: 13),
+      child: Container(
+          child: ListView(
+        children: sets,
+      )),
+    );
   }
 
   Future<int> fetchCurrentWorkoutId() async {
@@ -245,42 +263,38 @@ class _WorkoutExercisePageState extends State<WorkoutExercisePage> {
 
   Widget getCurrentExerciseSet(
       WorkoutExerciseSessionDetail exerciseSessionDetail) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 46, bottom: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          getCurrentSetCount(),
-          SizedBox(height: 36),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              getDecreaseButton(SetVariable.reps),
-              getCurrentExerciseSetReps(exerciseSessionDetail),
-              getIncreaseButton(SetVariable.reps)
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 26, bottom: 26),
-            child: Text('x',
-                style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    letterSpacing: 0.05,
-                    color: globals.secondaryTextColor,
-                    decoration: TextDecoration.none)),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              getDecreaseButton(SetVariable.weight),
-              getCurrentExerciseSetWeight(exerciseSessionDetail),
-              getIncreaseButton(SetVariable.weight)
-            ],
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        getCurrentSetCount(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            getDecreaseButton(SetVariable.reps),
+            getCurrentExerciseSetReps(exerciseSessionDetail),
+            getIncreaseButton(SetVariable.reps)
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Text('x',
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  letterSpacing: 0.05,
+                  color: globals.secondaryTextColor,
+                  decoration: TextDecoration.none)),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            getDecreaseButton(SetVariable.weight),
+            getCurrentExerciseSetWeight(exerciseSessionDetail),
+            getIncreaseButton(SetVariable.weight)
+          ],
+        )
+      ],
     );
   }
 
