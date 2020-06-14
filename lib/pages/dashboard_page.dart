@@ -36,6 +36,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 20, top: 30),
                     child: Text('Welcome ',
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
                         style: TextStyle(
                             color: globals.primaryTextColor,
                             decoration: TextDecoration.none,
@@ -68,7 +71,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 20,
                       crossAxisCount: 2,
-                      children: getGridControls()))
+                      children: getGridControls(itemWidth, itemHeight)))
             ],
           ),
         ),
@@ -76,8 +79,10 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  List<Widget> getGridControls() {
+  List<Widget> getGridControls(double controlWidth, double controlHeight) {
     var controls = List<Widget>();
+
+    const controlPadding = 22.0;
 
     var icons = [Icons.show_chart, Icons.fitness_center, Icons.settings];
     var controlHelperTextList = ['Show', 'Show', 'Edit'];
@@ -90,7 +95,7 @@ class _DashboardPageState extends State<DashboardPage> {
           child: InkWell(
             onTap: () => navigateToControlPage(controlMainTextList[i]),
             child: Container(
-              padding: const EdgeInsets.all(22),
+              padding: const EdgeInsets.all(controlPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -111,7 +116,8 @@ class _DashboardPageState extends State<DashboardPage> {
                       style: TextStyle(
                           color: globals.primaryTextColor,
                           decoration: TextDecoration.none,
-                          fontSize: 20,
+                          fontSize:
+                              (controlWidth - (controlPadding * 2)) / 9.185,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w900))
                 ],
