@@ -12,9 +12,9 @@ workouts toevoegen (reps, sets, ...) alsook per oefening zijn huidige statistiek
 
 ### MVP-features
 
-✔️ Aanmelden van een gebruiker
-✔️ Gebruiker kan een workout kiezen uit een aantal presets
-✔️ Details weergeven van een preset
-✔️ Details specifieke oefening binnen een workout
-✔️ Gebruiker ziet zijn vooruitgang, per oefening tijdens zijn sessie
+✔️ Aanmelden van een gebruiker  
+✔️ Gebruiker kan een workout kiezen uit een aantal presets  
+✔️ Details weergeven van een preset  
+✔️ Details specifieke oefening binnen een workout  
+✔️ Gebruiker ziet zijn vooruitgang, per oefening tijdens zijn sessie  
 ✔️ Overzicht verschillende workouts
