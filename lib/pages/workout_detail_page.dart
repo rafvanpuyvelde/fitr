@@ -39,6 +39,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    double _vw = MediaQuery.of(context).size.width;
+
     return Scaffold(
         backgroundColor: globals.primaryColor,
         key: _drawerKey,
@@ -66,14 +68,17 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 57, left: 18),
+                          padding: const EdgeInsets.only(top: 17, left: 15),
                           child: Text(
                               (_workoutDetail != null)
-                                  ? _workoutDetail.name
+                                  ? getWorkoutDetailName(_workoutDetail.name)
                                   : 'Workout',
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
                               style: TextStyle(
                                   color: globals.primaryTextColor,
-                                  fontSize: 36,
+                                  fontSize: _vw / 20,
                                   fontWeight: FontWeight.w900,
                                   fontStyle: FontStyle.normal,
                                   letterSpacing: 0.5)),
@@ -92,7 +97,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 57.0),
+                      padding: const EdgeInsets.only(top: 17.0),
                       child: Row(
                         children: <Widget>[
                           Text('Active',
@@ -137,7 +142,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                       }
                     }),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 45.0),
+                  padding: const EdgeInsets.only(bottom: 40),
                   child: Center(
                       child: Card(
                     elevation: 5,
@@ -152,7 +157,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                                 WorkoutExercisePage(widget.user)));
                       },
                       child: Container(
-                        width: 360,
+                        width: _vw * 0.9,
                         height: 70,
                         child: Center(
                           child: Text('Start workout',
@@ -232,5 +237,11 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 
       widget.notifyParent();
     }
+  }
+
+  String getWorkoutDetailName(String originalName) {
+    return (originalName.length >= 12)
+        ? originalName.substring(0, 11) + '...'
+        : originalName;
   }
 }

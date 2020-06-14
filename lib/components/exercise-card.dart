@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:fitr/models/user.dart';
 import 'package:fitr/models/workout_detail_exercise.dart';
 import 'package:fitr/pages/exercise_detail_page.dart';
@@ -19,37 +18,12 @@ class ExerciseCard extends StatefulWidget {
 }
 
 class _ExerciseCardState extends State<ExerciseCard> {
-  getRandomGradient() {
-    const gradients = [
-      [Color.fromARGB(255, 1, 163, 255), Color.fromARGB(255, 0, 119, 255)],
-      [Color.fromARGB(255, 254, 113, 112), Color.fromARGB(255, 254, 85, 85)],
-      [Color.fromARGB(255, 74, 192, 168), Color.fromARGB(255, 24, 151, 172)],
-      [Color.fromARGB(255, 249, 178, 191), Color.fromARGB(255, 146, 44, 249)],
-      [Color.fromARGB(255, 237, 155, 28), Color.fromARGB(255, 249, 207, 69)],
-    ];
-    var random = new Random();
-    return gradients[random.nextInt(gradients.length)];
-  }
-
-  String getExerciseName() {
-    return (widget.exercise.name.length >= 12)
-        ? widget.exercise.name.substring(0, 11) + '...'
-        : widget.exercise.name;
-  }
-
-  onExerciseTapped(ExerciseDetail exercise) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => ExerciseDetailPage(
-                exercise, widget.user, widget.workoutId, widget.workoutName)));
-  }
-
   @override
   Widget build(BuildContext context) {
+    double _vw = MediaQuery.of(context).size.width;
+
     return Padding(
-        padding: const EdgeInsets.only(
-            top: 30.0, bottom: 30.0, left: 15.0, right: 0),
+        padding: const EdgeInsets.only(top: 5, bottom: 5, left: 15),
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -67,70 +41,91 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       Color.fromARGB(255, 249, 178, 191),
                       Color.fromARGB(255, 146, 44, 249)
                     ])),
-                width: 250,
+                width: _vw / 1.7,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(top: 50, left: 40),
-                        child: Text(getExerciseName(),
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontSize: 29,
-                                fontWeight: FontWeight.w800,
-                                fontStyle: FontStyle.normal))),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40),
-                      child: Row(
+                    Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text('Max - ' + widget.exercise.record.toString(),
+                          Text(widget.exercise.name,
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
                               style: TextStyle(
                                   color: Color.fromARGB(255, 255, 255, 255),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: (_vw / 1.7) / 8.3,
+                                  fontWeight: FontWeight.w800,
                                   fontStyle: FontStyle.normal)),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2.0),
-                            child: Text(widget.exercise.unit.toString(),
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal)),
-                          )
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('Max - ' + widget.exercise.record.toString(),
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      fontStyle: FontStyle.normal)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 2.0),
+                                child: Text(widget.exercise.unit.toString(),
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        fontStyle: FontStyle.normal)),
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
                     Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 24, bottom: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: <Widget>[
-                            Text(widget.exercise.trend.toString(),
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontSize: 96,
-                                    fontWeight: FontWeight.w800,
-                                    fontStyle: FontStyle.normal,
-                                    letterSpacing: -8)),
-                            Text('%',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal))
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: <Widget>[
+                          Text(getExerciseTrend(),
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  fontSize: (_vw / 1.7) / 2.6,
+                                  fontWeight: FontWeight.w800,
+                                  fontStyle: FontStyle.normal,
+                                  letterSpacing: -8)),
+                          Text('%',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal))
+                        ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ));
+  }
+
+  onExerciseTapped(ExerciseDetail exercise) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => ExerciseDetailPage(
+                exercise, widget.user, widget.workoutId, widget.workoutName)));
+  }
+
+  String getExerciseTrend() {
+    var trend = widget.exercise.trend.toString();
+
+    if (trend.length > 0) trend = trend.replaceFirst(new RegExp(r'0'), '');
+
+    return trend;
   }
 }
